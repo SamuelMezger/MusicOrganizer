@@ -11,6 +11,8 @@
     
     <modules>
         <module>1-Plugins</module>
+        <module>2-Adapters</module>
+        <module>3-Application</module>
     </modules>
 
     <properties>
