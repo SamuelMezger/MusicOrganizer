@@ -2,7 +2,6 @@ package sapher;
 
 import anotherpackage.YoutubeRequest;
 import anotherpackage.YoutubeResponse;
-import com.sapher.youtubedl.DownloadProgressCallback;
 import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLException;
 import com.sapher.youtubedl.YoutubeDLRequest;

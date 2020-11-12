@@ -4,10 +4,11 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
+import somepackage.FullVideoInfo;
 import somepackage.MyDownloadProgressCallback;
 import somepackage.YoutubeException;
 
-public class SapherFlatVideoTest {
+public class SapherBasicVideoTest {
 
     private final static String MusicVid_TheFatRat_RuleTheWorld_ID = "OJdG8wsU8cw"; 
     private final static String MusicVid_TheFatRat_RuleTheWorld_Title = "TheFatRat & AleXa (알렉사) - Rule The World"; 
@@ -17,7 +18,7 @@ public class SapherFlatVideoTest {
         final float[] downloadProgress = new float[1];
 
         YoutubeRequestFactory youtubeRequestFactory = EasyMock.createMock(YoutubeRequestFactory.class);
-        SapherFlatVideo video = new SapherFlatVideo(MusicVid_TheFatRat_RuleTheWorld_ID, MusicVid_TheFatRat_RuleTheWorld_Title, youtubeRequestFactory);
+        SapherBasicVideo video = new SapherBasicVideo(MusicVid_TheFatRat_RuleTheWorld_ID, MusicVid_TheFatRat_RuleTheWorld_Title, youtubeRequestFactory);
 
         Capture<MyDownloadProgressCallback> cap = EasyMock.newCapture();
 

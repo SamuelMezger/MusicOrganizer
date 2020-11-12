@@ -1,7 +1,7 @@
 package anotherpackage;
 
-import somepackage.FlatVideoInfo;
-import somepackage.YouTube;
+import somepackage.BasicVideoInfo;
+import somepackage.Playlist;
 import somepackage.YoutubeException;
 
 import java.util.Arrays;
@@ -9,22 +9,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class SapherYouTube implements YouTube {
+public class SapherPlaylist implements Playlist {
 
     private final YoutubeRequestFactory youtubeRequestFactory;
-    private final FlatVideoInfoParser flatVideoInfoParser;
+    private final BasicVideoInfoParser basicVideoInfoParser;
 
-    public SapherYouTube(YoutubeRequestFactory youtubeRequestFactory, FlatVideoInfoParser flatVideoInfoParser) {
+    public SapherPlaylist(YoutubeRequestFactory youtubeRequestFactory, BasicVideoInfoParser basicVideoInfoParser) {
         this.youtubeRequestFactory = youtubeRequestFactory;
-        this.flatVideoInfoParser = flatVideoInfoParser;
+        this.basicVideoInfoParser = basicVideoInfoParser;
     }
 
     @Override
-    public List<FlatVideoInfo> flatPlaylistInfo(String playListId) throws YoutubeException {
+    public List<BasicVideoInfo> getBasicVideoInfos(String playListId) throws YoutubeException {
         String flatPlayListRawOutput = this.getFlatPlayListRawOutput(playListId);
 
         return Arrays.stream(flatPlayListRawOutput.split("\n"))
-                .map(flatVideoInfoParser::fromJson)
+                .map(basicVideoInfoParser::fromJson)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
