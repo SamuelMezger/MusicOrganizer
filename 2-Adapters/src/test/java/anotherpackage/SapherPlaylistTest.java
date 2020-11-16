@@ -19,7 +19,7 @@ public class SapherPlaylistTest {
     public void getBasicVideoInfos() throws YoutubeException {
         YoutubeRequestFactory youtubeRequestFactory = EasyMock.createMock(YoutubeRequestFactory.class);
         BasicVideoInfoParser basicVideoInfoParser = EasyMock.createMock(BasicVideoInfoParser.class);
-        SapherPlaylist sapherPlaylist = new SapherPlaylist(youtubeRequestFactory, basicVideoInfoParser);
+        SapherPlaylist sapherPlaylist = new SapherPlaylist("someID", youtubeRequestFactory, basicVideoInfoParser);
         YoutubeRequest youtubeRequest = EasyMock.createMock(YoutubeRequest.class);
         EasyMock.expect(youtubeRequestFactory.makeRequest("someID")).andReturn(youtubeRequest);
         
@@ -41,7 +41,7 @@ public class SapherPlaylistTest {
         EasyMock.replay(youtubeRequest);
         EasyMock.replay(youtubeResponse);
 
-        List<BasicVideoInfo> basicVideoInfos = sapherPlaylist.getBasicVideoInfos("someID");
+        List<BasicVideoInfo> basicVideoInfos = sapherPlaylist.getBasicVideoInfos();
         Assert.assertEquals(2, basicVideoInfos.size());
         Assert.assertTrue(basicVideoInfos.contains(someInfo));
         Assert.assertTrue(basicVideoInfos.contains(otherInfo));

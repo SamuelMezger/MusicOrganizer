@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface Playlist {
 
-    List<BasicVideoInfo> getBasicVideoInfos(String playListId) throws YoutubeException;
+    List<BasicVideoInfo> getBasicVideoInfos() throws YoutubeException;
 }

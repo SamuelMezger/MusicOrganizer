@@ -4,7 +4,6 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
-import somepackage.FullVideoInfo;
 import somepackage.MyDownloadProgressCallback;
 import somepackage.YoutubeException;
 

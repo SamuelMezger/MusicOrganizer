@@ -17,6 +17,11 @@ public class SapherBasicVideo implements BasicVideo, Downloadable {
         this.youtubeRequestFactory = youtubeRequestFactory;
     }
     
+//    @Override
+//    public void download(String destinationFolder, MyDownloadProgressCallback myDownloadProgressCallback) throws YoutubeException {
+//        youtubeRequestFactory.download(videoId, destinationFolder, myDownloadProgressCallback);
+//    }
+    
     @Override
     public void download(String destinationFolder, MyDownloadProgressCallback myDownloadProgressCallback) throws YoutubeException {
         YoutubeRequest downloadRequest = this.youtubeRequestFactory.makeRequest(this.videoId, destinationFolder);

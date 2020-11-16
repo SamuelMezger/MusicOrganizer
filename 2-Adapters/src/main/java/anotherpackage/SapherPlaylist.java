@@ -11,16 +11,23 @@ import java.util.stream.Collectors;
 
 public class SapherPlaylist implements Playlist {
 
+    private String playListId;
     private final YoutubeRequestFactory youtubeRequestFactory;
     private final BasicVideoInfoParser basicVideoInfoParser;
 
-    public SapherPlaylist(YoutubeRequestFactory youtubeRequestFactory, BasicVideoInfoParser basicVideoInfoParser) {
+    public SapherPlaylist(String playListId, YoutubeRequestFactory youtubeRequestFactory, BasicVideoInfoParser basicVideoInfoParser) {
+        this.playListId = playListId;
         this.youtubeRequestFactory = youtubeRequestFactory;
         this.basicVideoInfoParser = basicVideoInfoParser;
     }
 
+//    @Override
+//    public List<BasicVideoInfo> getBasicVideoInfos(String playListId) throws YoutubeException {
+//        return youtubeRequestFactory.getBasicVideoInfos(playListId);
+//    }
+    
     @Override
-    public List<BasicVideoInfo> getBasicVideoInfos(String playListId) throws YoutubeException {
+    public List<BasicVideoInfo> getBasicVideoInfos() throws YoutubeException {
         String flatPlayListRawOutput = this.getFlatPlayListRawOutput(playListId);
 
         return Arrays.stream(flatPlayListRawOutput.split("\n"))
