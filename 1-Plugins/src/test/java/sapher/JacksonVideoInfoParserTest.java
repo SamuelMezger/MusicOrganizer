@@ -1,7 +1,8 @@
-package jackson;
+package sapher;
 
 import org.junit.Assert;
 import org.junit.Test;
+import sapher.JacksonVideoInfoParser;
 import somepackage.BasicVideoInfo;
 
 import java.util.Optional;

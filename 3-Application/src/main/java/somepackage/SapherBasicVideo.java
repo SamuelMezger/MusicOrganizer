@@ -1,31 +1,26 @@
-package anotherpackage;
-
-import somepackage.BasicVideo;
-import somepackage.FullVideoInfo;
-import somepackage.MyDownloadProgressCallback;
-import somepackage.YoutubeException;
+package somepackage;
 
 
 public class SapherBasicVideo implements BasicVideo, Downloadable {
     private final String videoId;
     private final String videoTitle;
-    private final YoutubeRequestFactory youtubeRequestFactory;
+    private final YoutubeExtractor youtubeExtractor;
                 
-    public SapherBasicVideo(String videoId, String videoTitle, YoutubeRequestFactory youtubeRequestFactory) {
+    public SapherBasicVideo(String videoId, String videoTitle, YoutubeExtractor youtubeExtractor) {
         this.videoId = videoId;
         this.videoTitle = videoTitle;
-        this.youtubeRequestFactory = youtubeRequestFactory;
+        this.youtubeExtractor = youtubeExtractor;
     }
     
     @Override
     public void download(String destinationFolder, MyDownloadProgressCallback myDownloadProgressCallback) throws YoutubeException {
-        this.youtubeRequestFactory.downloadAudio(this.videoId, destinationFolder, myDownloadProgressCallback);
+        this.youtubeExtractor.downloadAudio(this.videoId, destinationFolder, myDownloadProgressCallback);
     }
 
 
     @Override
     public FullVideoInfo getFullVideoInfo() throws YoutubeException {
-        return this.youtubeRequestFactory.getFullVideoInfo(this.videoId);
+        return this.youtubeExtractor.getFullVideoInfo(this.videoId);
     }
 
     @Override

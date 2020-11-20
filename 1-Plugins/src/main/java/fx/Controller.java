@@ -1,25 +1,41 @@
 package fx;
 
-import javafx.concurrent.Task;
+import somepackage.YoutubeException;
+import somepackage.YoutubeExtractor;
+import sapher.JacksonVideoInfoParser;
+import sapher.SapherYoutubeExtractor;
 import sapher.SapherYoutubeRequestFactory;
 
 public class Controller {
-    private final SapherYoutubeRequestFactory youtubeRequestFactory;
-    HelloWorld view;
-    
+    private final YoutubeExtractor youtubeExtractor;
+    private final String destinationFolder;
+    private final String videoId;
+    private final HelloWorld view;
+    private final BackgroundTaskFactory backgroundTaskFactory;
+
     public Controller(HelloWorld view) {
         this.view = view;
-        this.youtubeRequestFactory = new SapherYoutubeRequestFactory();
+        this.youtubeExtractor = new SapherYoutubeExtractor(new SapherYoutubeRequestFactory(), new JacksonVideoInfoParser());
+        this.destinationFolder = "/tmp/test/";
+        this.videoId = "OJdG8wsU8cw";
+        this.backgroundTaskFactory = new FxBackgroundTaskFactory();
         
-        
-        view.addDownloadButtonListener(actionEvent -> {
+        this.view.addDownloadButtonListener(actionEvent -> {
             this.startDownload();
         });
     }
 
     private void startDownload() {
-        Task<Void> task = new DownloadTask<>(this.youtubeRequestFactory);
-        this.view.addProgressBarUpdater(task.progressProperty());
-        new Thread(task).start();
+        
+        
+        Runnable downloadTask = this.backgroundTaskFactory.createTask(() -> {
+            try {
+                this.youtubeExtractor.downloadAudio(this.videoId, this.destinationFolder, this.view);
+            } catch (YoutubeException e) {
+                e.printStackTrace();
+            }
+        });
+        
+        new Thread(downloadTask).start();
     }
 }

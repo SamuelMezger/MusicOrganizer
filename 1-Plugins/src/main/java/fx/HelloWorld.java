@@ -1,6 +1,5 @@
 package fx;
 
-import anotherpackage.View;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -15,7 +14,7 @@ import javafx.stage.Stage;
 import somepackage.MyDownloadProgressCallback;
 
 
-public class HelloWorld extends Application implements MyDownloadProgressCallback, View {
+public class HelloWorld extends Application implements MyDownloadProgressCallback {
     private ProgressBar progressBar;
     private Text progressTextField;
     private Stage primaryStage;
@@ -49,7 +48,7 @@ public class HelloWorld extends Application implements MyDownloadProgressCallbac
     @Override
     public void onProgressUpdate(float progress, long etaInSeconds) {
         System.out.println(progress);
-        this.progressBar.setProgress(progress);
+        this.progressBar.setProgress(progress/100);
         this.progressTextField.setText(progress + "%");
     }
 

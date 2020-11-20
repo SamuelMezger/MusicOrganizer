@@ -1,4 +1,4 @@
-package anotherpackage;
+package somepackage;
 
 import somepackage.MyDownloadProgressCallback;
 import somepackage.YoutubeException;

@@ -1,6 +1,5 @@
 package sapher;
 
-import anotherpackage.YoutubeResponse;
 import com.sapher.youtubedl.YoutubeDLResponse;
 
 public class SapherYoutubeResponse implements YoutubeResponse {
