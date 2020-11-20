@@ -21,16 +21,16 @@ public class SapherYoutubeRequest implements YoutubeRequest {
     }
 
     public void setOption(String key) {
-        youtubeDLRequest.setOption(key);
+        this.youtubeDLRequest.setOption(key);
     }
 
     public void setOption(String key, String value) {
-        youtubeDLRequest.setOption(key, value);
+        this.youtubeDLRequest.setOption(key, value);
     }
 
     public YoutubeResponse execute() throws YoutubeException {
         try {
-            return new SapherYoutubeResponse(YoutubeDL.execute(youtubeDLRequest));
+            return new SapherYoutubeResponse(YoutubeDL.execute(this.youtubeDLRequest));
         } catch (YoutubeDLException e) {
             e.printStackTrace();
             throw new YoutubeException(e);
@@ -39,7 +39,7 @@ public class SapherYoutubeRequest implements YoutubeRequest {
 
     public YoutubeResponse execute(MyDownloadProgressCallback myDownloadProgressCallback) throws YoutubeException {
         try {
-            return new SapherYoutubeResponse(YoutubeDL.execute(youtubeDLRequest, myDownloadProgressCallback::onProgressUpdate));
+            return new SapherYoutubeResponse(YoutubeDL.execute(this.youtubeDLRequest, myDownloadProgressCallback::onProgressUpdate));
         } catch (YoutubeDLException e) {
             e.printStackTrace();
             throw new YoutubeException(e);

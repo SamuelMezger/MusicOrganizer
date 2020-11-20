@@ -17,36 +17,29 @@ public class SapherBasicVideo implements BasicVideo, Downloadable {
         this.youtubeRequestFactory = youtubeRequestFactory;
     }
     
-//    @Override
-//    public void download(String destinationFolder, MyDownloadProgressCallback myDownloadProgressCallback) throws YoutubeException {
-//        youtubeRequestFactory.download(videoId, destinationFolder, myDownloadProgressCallback);
-//    }
-    
     @Override
     public void download(String destinationFolder, MyDownloadProgressCallback myDownloadProgressCallback) throws YoutubeException {
-        YoutubeRequest downloadRequest = this.youtubeRequestFactory.makeRequest(this.videoId, destinationFolder);
-        downloadRequest.setOption("format", "m4a");
-        downloadRequest.execute(myDownloadProgressCallback);
+        this.youtubeRequestFactory.downloadAudio(this.videoId, destinationFolder, myDownloadProgressCallback);
     }
 
 
     @Override
     public FullVideoInfo getFullVideoInfo() throws YoutubeException {
-        return youtubeRequestFactory.getFullVideoInfo(videoId);
+        return this.youtubeRequestFactory.getFullVideoInfo(this.videoId);
     }
 
     @Override
     public String getVideoId() {
-        return videoId;
+        return this.videoId;
     }
 
     @Override
     public String getVideoTitle() {
-        return videoTitle;
+        return this.videoTitle;
     }
 
     @Override
     public String toString() {
-        return "\"" + videoId + "\", \"" + videoTitle + "\"";
+        return "\"" + this.videoId + "\", \"" + this.videoTitle + "\"";
     }
 }
