@@ -50,7 +50,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.5</version>
                 <configuration>
-                    <mainClass>fx.HelloWorld</mainClass>
+                    <mainClass>fx.MainWindow</mainClass>
                 </configuration>
             </plugin>
             <plugin>

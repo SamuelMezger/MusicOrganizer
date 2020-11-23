@@ -1,9 +1,11 @@
 package fx;
 
+import event.GuiEventHandler;
+import view.MainView;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
@@ -11,10 +13,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import somepackage.MyDownloadProgressCallback;
 
 
-public class HelloWorld extends Application implements MyDownloadProgressCallback {
+public class MainWindow extends Application implements MainView {
     private ProgressBar progressBar;
     private Text progressTextField;
     private Stage primaryStage;
@@ -40,7 +41,6 @@ public class HelloWorld extends Application implements MyDownloadProgressCallbac
         StackPane root = new StackPane();
         root.getChildren().add(vBox);
         this.primaryStage.setScene(new Scene(root, 300, 250));
-        new Controller(this);
         this.primaryStage.show();
     }
 
@@ -57,9 +57,9 @@ public class HelloWorld extends Application implements MyDownloadProgressCallbac
         this.progressTextField.setText(text);
     }
 
-//    @Override
-    public void addDownloadButtonListener(EventHandler<ActionEvent> listener) {
-        this.downloadBtn.setOnAction(listener);
+    @Override
+    public void addDownloadButtonListener(GuiEventHandler listener) {
+        this.downloadBtn.setOnAction(listener::handle);
     }
     
     public void addProgressBarUpdater(ObservableValue<? extends Number> progressProperty){

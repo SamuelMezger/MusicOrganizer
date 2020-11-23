@@ -1,5 +1,6 @@
 package fx;
 
+import control.BackgroundTaskFactory;
 import javafx.concurrent.Task;
 
 public class FxBackgroundTaskFactory implements BackgroundTaskFactory {
