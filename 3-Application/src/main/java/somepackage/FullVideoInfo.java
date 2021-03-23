@@ -2,7 +2,7 @@ package somepackage;
 
 import java.util.Optional;
 
-public interface FullVideoInfo {
+public interface FullVideoInfo extends BasicVideoInfo{
     String getVideoId();
 
     String getVideoTitle();

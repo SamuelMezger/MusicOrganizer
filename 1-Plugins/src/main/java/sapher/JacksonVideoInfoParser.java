@@ -29,7 +29,7 @@ public class JacksonVideoInfoParser implements BasicVideoInfoParser {
 
         @JsonAnySetter
         public void methodToCatchUnneededValuesFromJson(String propertyKey, Object value) {
-            System.out.println(propertyKey + value);
+            System.out.println(propertyKey + ": " + value);
         }
 
         @JsonCreator

@@ -19,6 +19,8 @@ public class SapherFullVideoInfo implements FullVideoInfo {
             String videoId, String videoTitle, String videoThumbnailURL, String videoDescription,
             Optional<String> title, Optional<String> artist, Optional<String> album, Optional<String> releaseDate
     ) {
+//        TODO Optional.ofNullable()
+//        TODO dict
         this.videoId = videoId;
         this.videoTitle = videoTitle;
         this.videoThumbnailURL = videoThumbnailURL;
