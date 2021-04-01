@@ -27,12 +27,15 @@ public class SapherYoutubeExtractor implements YoutubeExtractor {
     @Override
     public List<BasicVideoInfo> getBasicVideoInfos(String playListId) throws YoutubeException {
         String flatPlayListRawOutput = this.getFlatPlayListRawOutput(playListId);
-
-        return Arrays.stream(flatPlayListRawOutput.split("\n"))
-                .map(this.basicVideoInfoParser::fromJson)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        if (!flatPlayListRawOutput.isEmpty()) {
+            return Arrays.stream(flatPlayListRawOutput.split("\n"))
+                    .map(this.basicVideoInfoParser::fromJson)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toList());
+        } else {
+            throw new YoutubeException("Could not find any videos");
+        }
     }
 
     public String getFlatPlayListRawOutput(String playListId) throws YoutubeException {

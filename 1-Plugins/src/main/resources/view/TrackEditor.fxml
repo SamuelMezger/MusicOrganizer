@@ -1,65 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import fx.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-
-<?import fx.FxTrackEditorView?>
-<FxTrackEditorView hgap="5.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" style="-fx-border-color: #0080f0; -fx-background-color: #a3d3ff; -fx-background-radius:5px; -fx-border-width: 1; -fx-border-radius: 5px;"
-                   vgap="2.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-                   fx:controller="fx.FxTrackEditorView">
-    <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="200.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-        <ColumnConstraints hgrow="SOMETIMES"/>
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints vgrow="SOMETIMES"/>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
-    </rowConstraints>
-    <children>
-        <TextField fx:id="trackTitleField" promptText="Title" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-        <TextField fx:id="artistField" promptText="Artist" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-        <TextField fx:id="albumField" promptText="Album" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-        <TextField fx:id="trackNumberField" promptText="TrackNr" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-        <TextField fx:id="releaseDateField" promptText="ReleaseDate" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-        <TextField fx:id="genreField" promptText="Genre" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
-        <Button fx:id="refreshButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-            <graphic>
-                <ImageView fitHeight="17.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@icons/refresh.png"/>
-                </ImageView>
-            </graphic>
-        </Button>
-        <Button fx:id="searchButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-            <graphic>
-                <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@icons/search.png"/>
-                </ImageView>
-            </graphic>
-        </Button>
-        <Button fx:id="openWebsite" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308"
-                mnemonicParsing="false" GridPane.columnIndex="4" GridPane.rowIndex="1">
-            <graphic>
-                <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@icons/external_link.png"/>
-                </ImageView>
-            </graphic>
-        </Button>
-        <Label fx:id="videoTitleLabel" text="Video Title" GridPane.columnSpan="2147483647"/>
-        <ProgressBar fx:id="downloadProgressBar" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-                     minWidth="-Infinity" prefHeight="20.0" progress="0.0" GridPane.columnSpan="2147483647"
-                     GridPane.rowIndex="3"/>
-    </children>
+<FxTrackEditorView fx:id="root" style="-fx-border-color: #0080f0; -fx-background-color: #a3d3ff; -fx-background-radius:5px; -fx-border-width: 1; -fx-border-radius: 5px;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.FxTrackEditorView">
+    <Label fx:id="videoTitleLabel" text="Video Title" />
+    <GridPane hgap="5.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" vgap="2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" />
+            <ColumnConstraints hgrow="NEVER" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="NEVER" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+        <children>
+            <Button fx:id="refreshButton" mnemonicParsing="false" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <graphic>
+                    <ImageView fitHeight="17.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@icons/refresh.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button fx:id="searchButton" mnemonicParsing="false" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                <graphic>
+                    <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@icons/search.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button fx:id="albumCover" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                <graphic>
+                    <ImageView fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@icons/image.png" />
+<!--                        <Image url="@life_is_dynamite.jpg" />-->
+                    </ImageView>
+                </graphic>
+            </Button>
+            <TextField fx:id="trackTitleField" promptText="Title" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="albumField" promptText="Album" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <TextField fx:id="artistField" promptText="Artist" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <TextField fx:id="releaseDateField" promptText="ReleaseDate" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <TextField fx:id="trackNumberField" promptText="TrackNr" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <TextField fx:id="genreField" promptText="Genre" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+            <Button fx:id="openWebsite" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                <graphic>
+                    <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@icons/external_link.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button fx:id="downloadButton" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                <graphic>
+                    <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@icons/download.png" />
+                    </ImageView>
+                </graphic>
+            </Button>
+            <ProgressBar fx:id="downloadProgressBar" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" progress="0.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+        </children>
+    </GridPane>
     <padding>
-        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
     </padding>
 </FxTrackEditorView>

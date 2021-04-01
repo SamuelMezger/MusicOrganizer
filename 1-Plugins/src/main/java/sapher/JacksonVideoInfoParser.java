@@ -28,9 +28,7 @@ public class JacksonVideoInfoParser implements BasicVideoInfoParser {
         private final String videoId;
 
         @JsonAnySetter
-        public void methodToCatchUnneededValuesFromJson(String propertyKey, Object value) {
-            System.out.println(propertyKey + ": " + value);
-        }
+        public void methodToCatchUnneededValuesFromJson(String propertyKey, Object value) {}
 
         @JsonCreator
         public JsonBasicVideoInfo(

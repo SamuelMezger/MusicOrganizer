@@ -4,6 +4,7 @@ import com.sun.javafx.menu.MenuItemBase;
 import event.GuiEventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -77,11 +78,6 @@ public class MainWindow extends Application implements MainView {
         this.progressTextField.setText(progress + "%");
     }
 
-
-    public void changeText(String text) {
-        this.progressTextField.setText(text);
-    }
-
     @Override
     public void addDownloadButtonListener(GuiEventHandler listener) {
         this.downloadBtn.setOnAction(listener::handle);
@@ -93,9 +89,26 @@ public class MainWindow extends Application implements MainView {
     }
 
     @Override
+    public void disableDownloadButton() {
+        this.PlDownloadBtn.setDisable(true);
+    }
+
+    @Override
+    public void enableDownloadButton() {
+        this.PlDownloadBtn.setDisable(false);
+    }
+
+    @Override
+    public void showCouldNotGetPlaylistException(String title, String message, String details) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, message + "\n\n" + details);
+        alert.setTitle(title);
+        alert.show();
+    }
+
+    @Override
     public TrackEditorView addTrackEditor() {
 
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../view/TrackEditor.fxml"));
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/view/TrackEditor.fxml"));
         try {
             this.trackListPane.getChildren().add(loader.load());
         } catch (IOException e) {

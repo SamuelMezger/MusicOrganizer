@@ -1,12 +1,11 @@
 package fx;
 
-import control.BackgroundTaskFactory;
+import control.TaskFactory;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
-public class FxBackgroundTaskFactory implements BackgroundTaskFactory {
+public class FxTaskFactory implements TaskFactory {
 
-    
     @Override
     public Runnable createTask(Runnable target) {
         return new Task<Void>() {
@@ -21,15 +20,5 @@ public class FxBackgroundTaskFactory implements BackgroundTaskFactory {
     @Override
     public void runInUiThread(Runnable task) {
         Platform.runLater(task);
-    }
-
-    public <T> Runnable createResultTask(Runnable target) {
-        return new Task<T>() {
-            @Override
-            protected T call() throws Exception {
-                target.run();
-                return null;
-            }
-        };
     }
 }

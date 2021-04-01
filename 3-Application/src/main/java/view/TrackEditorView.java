@@ -1,6 +1,18 @@
 package view;
 
-public interface TrackEditorView {
+import event.GuiEventHandler;
+import somepackage.MyDownloadProgressCallback;
+
+public interface TrackEditorView extends MyDownloadProgressCallback {
+
+    void showVideoNotAvailable(String errorMessage);
+
+    void addDownloadButtonListener(GuiEventHandler listener);
+
+    void disableDownloadButton();
+
+    void enableDownloadButton();
+
     void setVideoTitle(String videoTitle);
 
     void setAlbum(String album);

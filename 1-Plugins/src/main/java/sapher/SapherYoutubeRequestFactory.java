@@ -30,10 +30,10 @@ public class SapherYoutubeRequestFactory implements YoutubeRequestFactory {
                     videoInfo.title,
                     videoInfo.thumbnail,
                     videoInfo.description,
-                    videoInfo.track == null ? Optional.empty() : Optional.of(videoInfo.track),
-                    videoInfo.artist == null ? Optional.empty() : Optional.of(videoInfo.artist),
-                    videoInfo.album == null ? Optional.empty() : Optional.of(videoInfo.album),
-                    videoInfo.releaseDate == null ? Optional.empty() : Optional.of(videoInfo.releaseDate)
+                    Optional.ofNullable(videoInfo.track),
+                    Optional.ofNullable(videoInfo.artist),
+                    Optional.ofNullable(videoInfo.album),
+                    Optional.ofNullable(videoInfo.releaseDate)
             );
         } catch (YoutubeDLException e) {
             e.printStackTrace();

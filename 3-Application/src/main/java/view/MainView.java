@@ -10,4 +10,10 @@ public interface MainView extends MyDownloadProgressCallback {
     public void pleaseComplainAboutNotFxThread();
 
     void addGetPLButtonListener(GuiEventHandler handler);
+
+    void disableDownloadButton();
+
+    void enableDownloadButton();
+
+    void showCouldNotGetPlaylistException(String title, String message, String details);
 }

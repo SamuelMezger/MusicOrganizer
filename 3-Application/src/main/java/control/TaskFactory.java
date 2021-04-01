@@ -1,6 +1,6 @@
 package control;
 
-public interface BackgroundTaskFactory {
+public interface TaskFactory {
     Runnable createTask(Runnable target);
 
     void runInUiThread(Runnable task);
