@@ -13,17 +13,16 @@ public class Controller {
     private final MainView view;
     private final List<TrackEditorController> trackControllers;
     private final TaskManager taskManager;
-    private final TaskFactory taskFactory;
 
-    public Controller(MainView view, TaskManager taskManager, TaskFactory taskFactory, YoutubeExtractor youtubeExtractor) {
+    public Controller(MainView view, TaskManager taskManager, YoutubeExtractor youtubeExtractor) {
         this.view = view;
-        this.taskFactory = taskFactory;
         this.youtubeExtractor = youtubeExtractor;
         this.taskManager = taskManager;
 
-
-        this.view.addDownloadButtonListener(actionEvent -> this.startDownload());
-        this.view.addGetPLButtonListener(actionEvent -> this.startPLDownload());
+        this.view.addGetPLButtonListener(actionEvent -> {
+            String url = view.getPlUrl();
+            this.startPlSync(url);
+        });
 
         this.trackControllers = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
@@ -33,15 +32,13 @@ public class Controller {
         }
     }
 
-    private void startPLDownload() {
-        String playListId = "PLvy1DvHP0feqGoG474BC0lTTjMNjroK1R"; // test_available
-//        String playListId = "PLvy1DvHP0feqX7YavO62Ff7D1omilCqVl"; // test
+    private void startPlSync(String url) {
 
         this.view.disableDownloadButton();
         this.taskManager
                 .doInBackground(() -> {
                     try {
-                        return this.youtubeExtractor.getBasicVideoInfos(playListId);
+                        return this.youtubeExtractor.getBasicVideoInfos(url);
                     } catch (YoutubeException e) {
                         throw new CompletionException(e);
                     }
@@ -60,23 +57,5 @@ public class Controller {
                             throwable.getMessage());
                 })
                 .submit();
-    }
-
-
-    private void startDownload() {
-        String destinationFolder = "/tmp/test/";
-        String videoId = "OJdG8wsU8cw";
-
-        Runnable downloadTask = this.taskFactory.createTask(() -> {
-//        Runnable downloadTask = () -> {
-            try {
-//                TODO controller instead of view as
-                this.youtubeExtractor.downloadAudio(videoId, destinationFolder, this.view);
-            } catch (YoutubeException e) {
-                e.printStackTrace();
-            }
-        });
-//        };
-        new Thread(downloadTask).start();
     }
 }

@@ -31,7 +31,7 @@ public class Application {
             Stage stage = new Stage();
             stage.setOnCloseRequest(windowEvent -> taskManager.shutdown());
             view.start(stage);
-            Controller controller = new Controller(view, taskManager, taskFactory, youtubeExtractor);
+            Controller controller = new Controller(view, taskManager, youtubeExtractor);
         });
 
     }

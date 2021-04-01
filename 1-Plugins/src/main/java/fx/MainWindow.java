@@ -1,22 +1,16 @@
 package fx;
 
-import com.sun.javafx.menu.MenuItemBase;
 import event.GuiEventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import view.MainView;
 import javafx.application.Application;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import view.TrackEditorView;
 
@@ -24,20 +18,16 @@ import java.io.IOException;
 
 
 public class MainWindow extends Application implements MainView {
-    private ProgressBar progressBar;
-    private Text progressTextField;
-    private Button downloadBtn;
+    private TextField playListUrl;
     private VBox root;
     private VBox trackListPane;
-    private Button PlDownloadBtn;
+    private Button syncPLButton;
 
 
     @Override
     public void start(Stage primaryStage) {
-        this.progressBar = new ProgressBar(0);
-        this.progressTextField = new Text("Not yet started");
-        this.downloadBtn = new Button("Download");
-        this.PlDownloadBtn = new Button("Sync Playlist");
+        this.playListUrl = new TextField("PLvy1DvHP0feqGoG474BC0lTTjMNjroK1R");
+        this.syncPLButton = new Button("Sync Playlist");
 
         primaryStage.setTitle("Hello World!");
         this.root = new VBox();
@@ -48,10 +38,8 @@ public class MainWindow extends Application implements MainView {
         TopBar topBar = new TopBar();
         ObservableList<Node> topBarChildren = topBar.getChildren();
         topBarChildren.add(btn);
-        topBarChildren.add(this.downloadBtn);
-        topBarChildren.add(this.progressBar);
-        topBarChildren.add(this.progressTextField);
-        topBarChildren.add(this.PlDownloadBtn);
+        topBarChildren.add(this.playListUrl);
+        topBarChildren.add(this.syncPLButton);
         this.root.getChildren().add(topBar);
 
         this.trackListPane = new VBox();
@@ -69,33 +57,19 @@ public class MainWindow extends Application implements MainView {
 //        this.pleaseComplainAboutNotFxThread();
     }
 
-
-    @Override
-    public void onProgressUpdate(float progress, long etaInSeconds) {
-        System.out.println(progress);
-        System.out.println(Thread.currentThread().getName());
-        this.progressBar.setProgress(progress/100);
-        this.progressTextField.setText(progress + "%");
-    }
-
-    @Override
-    public void addDownloadButtonListener(GuiEventHandler listener) {
-        this.downloadBtn.setOnAction(listener::handle);
-    }
-
     @Override
     public void addGetPLButtonListener(GuiEventHandler listener) {
-        this.PlDownloadBtn.setOnAction(listener::handle);
+        this.syncPLButton.setOnAction(listener::handle);
     }
 
     @Override
     public void disableDownloadButton() {
-        this.PlDownloadBtn.setDisable(true);
+        this.syncPLButton.setDisable(true);
     }
 
     @Override
     public void enableDownloadButton() {
-        this.PlDownloadBtn.setDisable(false);
+        this.syncPLButton.setDisable(false);
     }
 
     @Override
@@ -103,6 +77,11 @@ public class MainWindow extends Application implements MainView {
         Alert alert = new Alert(Alert.AlertType.ERROR, message + "\n\n" + details);
         alert.setTitle(title);
         alert.show();
+    }
+
+    @Override
+    public String getPlUrl() {
+        return this.playListUrl.getText();
     }
 
     @Override
@@ -114,12 +93,7 @@ public class MainWindow extends Application implements MainView {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return loader.<FxTrackEditorView>getController();
-    }
-
-    public void addProgressBarUpdater(ObservableValue<? extends Number> progressProperty){
-        this.progressBar.progressProperty().bind(progressProperty);
     }
 
     @Override
