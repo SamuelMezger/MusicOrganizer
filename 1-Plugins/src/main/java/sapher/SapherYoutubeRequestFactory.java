@@ -4,7 +4,6 @@ import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLException;
 import com.sapher.youtubedl.mapper.VideoInfo;
 import somepackage.FullVideoInfo;
-import somepackage.SapherFullVideoInfo;
 import somepackage.YoutubeException;
 
 import java.util.Optional;
@@ -25,7 +24,7 @@ public class SapherYoutubeRequestFactory implements YoutubeRequestFactory {
     public FullVideoInfo getFullVideoInfo(String id) throws YoutubeException {
         try {
             VideoInfo videoInfo = YoutubeDL.getVideoInfo(id);
-            return new SapherFullVideoInfo(
+            return new FullVideoInfo(
                     videoInfo.id,
                     videoInfo.title,
                     videoInfo.thumbnail,

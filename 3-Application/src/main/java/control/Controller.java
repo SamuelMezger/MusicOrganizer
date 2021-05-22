@@ -26,9 +26,9 @@ public class Controller {
 
         this.trackControllers = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
-            BasicVideo basicVideo = new SapherBasicVideo("OJdG8wsU8cw", "Rule the world", this.youtubeExtractor);
+            BasicVideoInfo basicVideoInfo = new BasicVideoInfo("OJdG8wsU8cw", "Rule the world");
             TrackEditorView trackView = this.view.addTrackEditor();
-            this.trackControllers.add(new TrackEditorController(basicVideo, trackView, this.taskManager, this.youtubeExtractor));
+            this.trackControllers.add(new TrackEditorController(basicVideoInfo, trackView, this.taskManager, this.youtubeExtractor));
         }
     }
 

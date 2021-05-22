@@ -2,20 +2,76 @@ package somepackage;
 
 import java.util.Optional;
 
-public interface FullVideoInfo extends BasicVideoInfo{
-    String getVideoId();
+public class FullVideoInfo {
+    private final String videoId;
+    private final String videoTitle;
+    private final String videoThumbnailURL;
+    private final String videoDescription;
 
-    String getVideoTitle();
+    private final Optional<String> title;
+    private final Optional<String> artist;
+    private final Optional<String> album;
+    private final Optional<String> releaseDate;
 
-    String getVideoThumbnailURL();
+    public FullVideoInfo(
+            String videoId, String videoTitle, String videoThumbnailURL, String videoDescription,
+            Optional<String> title, Optional<String> artist, Optional<String> album, Optional<String> releaseDate
+    ) {
+//        TODO Optional.ofNullable()
+//        TODO dict
+        this.videoId = videoId;
+        this.videoTitle = videoTitle;
+        this.videoThumbnailURL = videoThumbnailURL;
+        this.videoDescription = videoDescription;
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
+        this.releaseDate = releaseDate;
+    }
 
-    String getVideoDescription();
+    public String getVideoId() {
+        return videoId;
+    }
 
-    Optional<String> getTitle();
+    public String getVideoTitle() {
+        return videoTitle;
+    }
 
-    Optional<String> getArtist();
+    public String getVideoThumbnailURL() {
+        return videoThumbnailURL;
+    }
 
-    Optional<String> getAlbum();
+    public String getVideoDescription() {
+        return videoDescription;
+    }
 
-    Optional<String> getReleaseDate();
+    public Optional<String> getTitle() {
+        return title;
+    }
+
+    public Optional<String> getArtist() {
+        return artist;
+    }
+
+    public Optional<String> getAlbum() {
+        return album;
+    }
+
+    public Optional<String> getReleaseDate() {
+        return releaseDate;
+    }
+
+    @Override
+    public String toString() {
+        return "SapherFullVideoInfo{" +
+                "videoId='" + videoId + '\'' +
+                ", videoTitle='" + videoTitle + '\'' +
+                ", videoThumbnailURL='" + videoThumbnailURL + '\'' +
+                ", videoDescription='" + videoDescription + '\'' +
+                ", title=" + (title.orElse("---")) +
+                ", artist=" + (artist.orElse("---")) +
+                ", album=" + (album.orElse("---")) +
+                ", releaseDate=" + (releaseDate.orElse("---")) +
+                '}';
+    }
 }

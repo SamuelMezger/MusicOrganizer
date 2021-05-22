@@ -21,7 +21,7 @@ public class JacksonVideoInfoParserTest {
     }
     
     @Test
-    public void testFromJsonMissinfTitleFail() {
+    public void testFromJsonMissingIdFail() {
         String flatVideoInfoJson = "{\"_type\": \"url\", \"url\": \"OJdG8wsU8cw\", \"ie_key\": \"Youtube\", \"title\": \"TheFatRat & AleXa (\\uc54c\\ub809\\uc0ac) - Rule The World\"}";
         JacksonVideoInfoParser jacksonVideoInfoParser = new JacksonVideoInfoParser();
         Optional<BasicVideoInfo> flatVideoInfoOpt = jacksonVideoInfoParser.fromJson(flatVideoInfoJson);

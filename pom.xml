@@ -13,6 +13,7 @@
         <module>1-Plugins</module>
         <module>2-Adapters</module>
         <module>3-Application</module>
+        <module>4-Domain</module>
     </modules>
 
     <properties>

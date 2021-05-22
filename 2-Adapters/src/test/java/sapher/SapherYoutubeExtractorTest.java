@@ -4,7 +4,6 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
-import sapher.*;
 import somepackage.*;
 
 import java.util.List;
@@ -72,9 +71,9 @@ public class SapherYoutubeExtractorTest {
         YoutubeResponse youtubeResponse = EasyMock.createMock(YoutubeResponse.class);
         EasyMock.expect(youtubeResponse.getOut()).andReturn(flatPlaylistRawOut);
         EasyMock.expect(youtubeRequest.execute()).andReturn(youtubeResponse);
-        SapherBasicVideo someInfo = new SapherBasicVideo("someID", "someTitle", youtubeExtractor);
+        BasicVideoInfo someInfo = new BasicVideoInfo("someID", "someTitle");
         EasyMock.expect(basicVideoInfoParser.fromJson("some Info in Json")).andReturn(Optional.of(someInfo));
-        SapherBasicVideo otherInfo = new SapherBasicVideo("otherID", "otherTitle", youtubeExtractor);
+        BasicVideoInfo otherInfo = new BasicVideoInfo("otherID", "otherTitle");
         EasyMock.expect(basicVideoInfoParser.fromJson("other Info in Json")).andReturn(Optional.of(otherInfo));
         EasyMock.expect(basicVideoInfoParser.fromJson("not parsable Json")).andReturn(Optional.empty());
 

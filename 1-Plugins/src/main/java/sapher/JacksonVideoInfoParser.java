@@ -15,14 +15,15 @@ public class JacksonVideoInfoParser implements BasicVideoInfoParser {
         // Parse result
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return Optional.of(objectMapper.readValue(flatVideoInfoJson, JsonBasicVideoInfo.class));
+            JsonBasicVideoInfo jsonInfo = objectMapper.readValue(flatVideoInfoJson, JsonBasicVideoInfo.class);
+            return Optional.of(new BasicVideoInfo(jsonInfo.getVideoId(), jsonInfo.getVideoTitle()));
         } catch (IOException e) {
             e.printStackTrace();
         }
         return Optional.empty();
     }
 
-    private static class JsonBasicVideoInfo implements BasicVideoInfo {
+    private static class JsonBasicVideoInfo {
 
         private final String videoTitle;
         private final String videoId;
@@ -38,19 +39,12 @@ public class JacksonVideoInfoParser implements BasicVideoInfoParser {
             this.videoTitle = videoTitle;
         }
 
-        @Override
         public String getVideoId() {
             return videoId;
         }
 
-        @Override
         public String getVideoTitle() {
             return videoTitle;
-        }
-
-        @Override
-        public String toString() {
-            return "\"" + videoId + "\", \"" + videoTitle + "\"";
         }
     }
     
