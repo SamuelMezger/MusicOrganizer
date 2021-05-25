@@ -22,6 +22,7 @@ public class SapherYoutubeRequestFactory implements YoutubeRequestFactory {
 
     @Override
     public FullVideoInfo getFullVideoInfo(String id) throws YoutubeException {
+//        TODO fetch thumbnail
         try {
             VideoInfo videoInfo = YoutubeDL.getVideoInfo(id);
             return new FullVideoInfo(
