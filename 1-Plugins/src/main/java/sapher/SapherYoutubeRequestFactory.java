@@ -3,7 +3,7 @@ package sapher;
 import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLException;
 import com.sapher.youtubedl.mapper.VideoInfo;
-import somepackage.FullVideoInfo;
+import model.youtube.FullVideoInfo;
 import somepackage.YoutubeException;
 
 import java.util.Optional;

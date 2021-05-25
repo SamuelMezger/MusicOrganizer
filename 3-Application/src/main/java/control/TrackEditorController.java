@@ -1,5 +1,7 @@
 package control;
 
+import model.youtube.BasicVideoInfo;
+import model.youtube.FullVideoInfo;
 import somepackage.*;
 import view.TrackEditorView;
 

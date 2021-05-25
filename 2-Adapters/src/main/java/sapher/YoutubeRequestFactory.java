@@ -1,6 +1,6 @@
 package sapher;
 
-import somepackage.FullVideoInfo;
+import model.youtube.FullVideoInfo;
 import somepackage.YoutubeException;
 
 public interface YoutubeRequestFactory {

@@ -1,5 +1,7 @@
 package sapher;
 
+import model.youtube.BasicVideoInfo;
+import model.youtube.FullVideoInfo;
 import somepackage.*;
 
 import java.util.Arrays;

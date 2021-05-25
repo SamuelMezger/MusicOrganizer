@@ -1,6 +1,9 @@
 package somepackage;
 
 
+import model.youtube.BasicVideoInfo;
+import model.youtube.FullVideoInfo;
+
 import java.util.List;
 
 public interface YoutubeExtractor {

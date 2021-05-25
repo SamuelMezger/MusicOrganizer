@@ -1,5 +1,6 @@
 package sapher;
 
+import model.youtube.BasicVideoInfo;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Assert;

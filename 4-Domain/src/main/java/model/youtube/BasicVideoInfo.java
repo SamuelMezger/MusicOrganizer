@@ -1,4 +1,4 @@
-package somepackage;
+package model.youtube;
 
 
 public class BasicVideoInfo {

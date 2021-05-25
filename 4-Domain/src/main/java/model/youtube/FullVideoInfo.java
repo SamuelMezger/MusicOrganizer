@@ -1,4 +1,4 @@
-package somepackage;
+package model.youtube;
 
 import java.util.Optional;
 
@@ -63,7 +63,7 @@ public class FullVideoInfo {
 
     @Override
     public String toString() {
-        return "SapherFullVideoInfo{" +
+        return "FullVideoInfo{" +
                 "videoId='" + videoId + '\'' +
                 ", videoTitle='" + videoTitle + '\'' +
                 ", videoThumbnailURL='" + videoThumbnailURL + '\'' +

@@ -1,6 +1,6 @@
 package sapher;
 
-import somepackage.BasicVideoInfo;
+import model.youtube.BasicVideoInfo;
 
 import java.util.Optional;
 
