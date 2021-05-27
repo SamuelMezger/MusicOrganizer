@@ -1,7 +1,7 @@
 package control;
 
 import model.youtube.BasicVideoInfo;
-import somepackage.*;
+import extraction.*;
 import view.MainView;
 import view.TrackEditorView;
 
@@ -40,7 +40,7 @@ public class Controller {
                 .doInBackground(() -> {
                     try {
                         return this.youtubeExtractor.getBasicVideoInfos(url);
-                    } catch (YoutubeException e) {
+                    } catch (ExtractionException e) {
                         throw new CompletionException(e);
                     }
                 })

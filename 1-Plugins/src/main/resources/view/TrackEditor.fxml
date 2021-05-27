@@ -38,9 +38,9 @@
                     </ImageView>
                 </graphic>
             </Button>
-            <Button fx:id="albumCover" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
+            <Button fx:id="albumCoverButton" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
                 <graphic>
-                    <ImageView fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="albumCoverImageView" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="@icons/image.png" />
 <!--                        <Image url="@life_is_dynamite.jpg" />-->
                     </ImageView>
@@ -49,7 +49,7 @@
             <TextField fx:id="trackTitleField" promptText="Title" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <TextField fx:id="albumField" promptText="Album" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <TextField fx:id="artistField" promptText="Artist" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <TextField fx:id="releaseDateField" promptText="ReleaseDate" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <TextField fx:id="releaseYearField" promptText="ReleaseYear" GridPane.columnIndex="3" GridPane.rowIndex="2" />
             <TextField fx:id="trackNumberField" promptText="TrackNr" GridPane.columnIndex="4" GridPane.rowIndex="1" />
             <TextField fx:id="genreField" promptText="Genre" GridPane.columnIndex="4" GridPane.rowIndex="2" />
             <Button fx:id="openWebsite" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" GridPane.columnIndex="5" GridPane.rowIndex="1">

@@ -6,27 +6,25 @@ public class FullVideoInfo {
     private final String videoId;
     private final String videoTitle;
     private final String videoThumbnailURL;
-    private final String videoDescription;
 
     private final Optional<String> title;
     private final Optional<String> artist;
     private final Optional<String> album;
-    private final Optional<String> releaseDate;
+    private final Optional<String> releaseYear;
 
     public FullVideoInfo(
-            String videoId, String videoTitle, String videoThumbnailURL, String videoDescription,
-            Optional<String> title, Optional<String> artist, Optional<String> album, Optional<String> releaseDate
+            String videoId, String videoTitle, String videoThumbnailURL,
+            Optional<String> title, Optional<String> artist, Optional<String> album, Optional<String> releaseYear
     ) {
 //        TODO Optional.ofNullable()
 //        TODO dict
         this.videoId = videoId;
         this.videoTitle = videoTitle;
         this.videoThumbnailURL = videoThumbnailURL;
-        this.videoDescription = videoDescription;
         this.title = title;
         this.artist = artist;
         this.album = album;
-        this.releaseDate = releaseDate;
+        this.releaseYear = releaseYear;
     }
 
     public String getVideoId() {
@@ -41,9 +39,6 @@ public class FullVideoInfo {
         return videoThumbnailURL;
     }
 
-    public String getVideoDescription() {
-        return videoDescription;
-    }
 
     public Optional<String> getTitle() {
         return title;
@@ -57,8 +52,8 @@ public class FullVideoInfo {
         return album;
     }
 
-    public Optional<String> getReleaseDate() {
-        return releaseDate;
+    public Optional<String> getReleaseYear() {
+        return releaseYear;
     }
 
     @Override
@@ -67,11 +62,10 @@ public class FullVideoInfo {
                 "videoId='" + videoId + '\'' +
                 ", videoTitle='" + videoTitle + '\'' +
                 ", videoThumbnailURL='" + videoThumbnailURL + '\'' +
-                ", videoDescription='" + videoDescription + '\'' +
                 ", title=" + (title.orElse("---")) +
                 ", artist=" + (artist.orElse("---")) +
                 ", album=" + (album.orElse("---")) +
-                ", releaseDate=" + (releaseDate.orElse("---")) +
+                ", releaseDate=" + (releaseYear.orElse("---")) +
                 '}';
     }
 }

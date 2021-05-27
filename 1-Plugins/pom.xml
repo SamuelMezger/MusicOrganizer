@@ -110,6 +110,16 @@
             <version>1.7</version>
         </dependency>
         <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bitbucket.ijabz</groupId>
+            <artifactId>jaudiotagger</artifactId>
+            <version>v2.2.5</version>
+        </dependency>
+        <dependency>
             <groupId>org.example</groupId>
             <artifactId>3-Application</artifactId>
             <version>1.0-SNAPSHOT</version>

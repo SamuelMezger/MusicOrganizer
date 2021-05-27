@@ -1,11 +1,12 @@
 package sapher;
 
+import extraction.Downloader;
 import model.youtube.BasicVideoInfo;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
-import somepackage.*;
+import extraction.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +19,12 @@ public class SapherYoutubeExtractorTest {
 
 
     @Test
-    public void testDownloadAudio() throws YoutubeException {
+    public void testDownloadAudio() throws ExtractionException {
         final float[] downloadProgress = new float[1];
 
         YoutubeRequestFactory youtubeRequestFactory = EasyMock.createMock(YoutubeRequestFactory.class);
-        YoutubeExtractor youtubeExtractor = new SapherYoutubeExtractor(youtubeRequestFactory, EasyMock.createMock(BasicVideoInfoParser.class));
+        Downloader downloader = EasyMock.createMock(Downloader.class);
+        YoutubeExtractor youtubeExtractor = new SapherYoutubeExtractor(youtubeRequestFactory, EasyMock.createMock(BasicVideoInfoParser.class), downloader);
 
         Capture<MyDownloadProgressCallback> cap = EasyMock.newCapture();
 
@@ -57,10 +59,11 @@ public class SapherYoutubeExtractorTest {
     }
 
     @Test
-    public void getBasicVideoInfos() throws YoutubeException {
+    public void getBasicVideoInfos() throws ExtractionException {
         YoutubeRequestFactory youtubeRequestFactory = EasyMock.createMock(YoutubeRequestFactory.class);
         BasicVideoInfoParser basicVideoInfoParser = EasyMock.createMock(BasicVideoInfoParser.class);
-        YoutubeExtractor youtubeExtractor = new SapherYoutubeExtractor(youtubeRequestFactory, basicVideoInfoParser);
+        Downloader downloader = EasyMock.createMock(Downloader.class);
+        YoutubeExtractor youtubeExtractor = new SapherYoutubeExtractor(youtubeRequestFactory, basicVideoInfoParser, downloader);
 
         YoutubeRequest youtubeRequest = EasyMock.createMock(YoutubeRequest.class);
         EasyMock.expect(youtubeRequestFactory.makeRequest("someID")).andReturn(youtubeRequest);

@@ -1,8 +1,8 @@
 package control;
 
 import model.youtube.BasicVideoInfo;
-import model.youtube.FullVideoInfo;
-import somepackage.*;
+import model.Metadata;
+import extraction.*;
 import view.TrackEditorView;
 
 import java.util.concurrent.CompletionException;
@@ -28,6 +28,7 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                 this.basicVideo.getVideoTitle()
         );
         this.startFullInfoDownload();
+//        this.startMetadataSearch();
     }
 
     private void startFullInfoDownload() {
@@ -35,7 +36,7 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                 .doInBackground(() -> {
                     try {
                         return this.youtubeExtractor.getFullVideoInfo(this.basicVideo.getVideoId());
-                    } catch (YoutubeException e) {
+                    } catch (ExtractionException e) {
                         throw new CompletionException(e);
                     }
                 })
@@ -53,9 +54,10 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                     @Override
                     public Void get() {
                         try {
+//                            TODO pass current working directory as absolute path to YoutubeExtractor constructor
                             youtubeExtractor.downloadAudio(basicVideo.getVideoId(), "/tmp/test/", this);
                             return null;
-                        } catch (YoutubeException e) {
+                        } catch (ExtractionException e) {
                             throw new CompletionException(e);
                         }
                     }
@@ -66,14 +68,34 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                 })
                 .submit();
     }
+//
+//    private void startMetadataSearch() {
+//        for (MetadataProvider provider : this.metadataProvider) {
+//            this.taskManager
+//                    .doInBackground(() -> provider.searchFor(this.basicVideo.getVideoTitle()))
+//                    .whenCompletedSuccessful(t -> {
+//                        for (MetadataClass metadata : t) {
+//                            this.addSearchResult(metadata);
+//                        }
+//                    });
+//        }
+//    }
+//
+//    private void addSearchResult(MetadataClass metadata) {
+//
+//        for (Map.Entry entry : metadata.asMap().entrySet()) {
+//            if (entry.uncertenty < current.uncertenty)
+//                this.trackView.setAlbumCover(entry);
+//
+//        }
+//    }
 
-    private void updateTrackView(FullVideoInfo fullVideoInfo) {
+    private void updateTrackView(Metadata fullVideoInfo) {
         fullVideoInfo.getTitle().ifPresent(this.trackView::setTitle);
         fullVideoInfo.getAlbum().ifPresent(this.trackView::setAlbum);
         fullVideoInfo.getArtist().ifPresent(this.trackView::setArtist);
-        fullVideoInfo.getReleaseDate().ifPresent(this.trackView::setReleaseDate);
-        System.out.println(fullVideoInfo.getVideoThumbnailURL());
-//        this.trackView.setAlbumCover();
+        fullVideoInfo.getReleaseYear().ifPresent(this.trackView::setReleaseYear);
+        fullVideoInfo.getCover().ifPresent(this.trackView::setAlbumCover);
     }
 
 

@@ -5,6 +5,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -14,23 +17,22 @@ import javafx.stage.Window;
 import javafx.embed.swing.SwingFXUtils;
 import view.TrackEditorView;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 
 public class FxTrackEditorView extends VBox implements TrackEditorView, Initializable {
 
+    @FXML private ImageView albumCoverImageView;
     @FXML private FxTrackEditorView root;
-    @FXML private Button albumCover;
+    @FXML private Button albumCoverButton;
     @FXML private Label videoTitleLabel;
     @FXML private TextField trackTitleField;
     @FXML private TextField artistField;
     @FXML private TextField albumField;
     @FXML private TextField trackNumberField;
-    @FXML private TextField releaseDateField;
+    @FXML private TextField releaseYearField;
     @FXML private TextField genreField;
     @FXML private Button refreshButton;
     @FXML private Button searchButton;
@@ -41,10 +43,8 @@ public class FxTrackEditorView extends VBox implements TrackEditorView, Initiali
 
     public FxTrackEditorView() {
         this.popup = new Popup();
-        GridPane popupContent = new GridPane();
-        popupContent.add(new Button("lulu"), 1, 1);
-        popupContent.add(new Label("kuku"), 2, 1);
-        this.popup.getContent().add(popupContent);
+        this.popup.getContent().add(new ResultsView());
+
     }
 
     @Override
@@ -53,10 +53,10 @@ public class FxTrackEditorView extends VBox implements TrackEditorView, Initiali
     }
 
     public void configurePopup() {
-        this.albumCover.focusedProperty().addListener((observableValue, isNotFocused, isFocused) -> {
+        this.albumCoverButton.focusedProperty().addListener((observableValue, isNotFocused, isFocused) -> {
             if (isNotFocused) this.popup.hide();
         });
-        this.albumCover.setOnAction(actionEvent -> {
+        this.albumCoverButton.setOnAction(actionEvent -> {
             if (this.popup.isShowing()) {
                 this.popup.hide();
             } else {
@@ -68,11 +68,9 @@ public class FxTrackEditorView extends VBox implements TrackEditorView, Initiali
     private void showPopup() {
         Window window = this.root.getScene().getWindow();
         this.popup.show(window);
-        Point2D point = this.albumCover.localToScene(0.0,  0.0);
+        Point2D point = this.albumCoverButton.localToScene(0.0,  0.0);
         this.popup.setX(window.getX() + point.getX());
-//        System.out.println("popup :" + this.popup.getHeight());
-//        System.out.println("button:" + this.albumCover.getHeight());
-        this.popup.setY(window.getY() + point.getY() + this.albumCover.getHeight() + this.popup.getHeight());
+        this.popup.setY(window.getY() + point.getY() + 1.5 * this.albumCoverButton.getHeight());
     }
 
     @Override
@@ -125,7 +123,13 @@ public class FxTrackEditorView extends VBox implements TrackEditorView, Initiali
     }
 
     @Override
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDateField.setText(releaseDate);
+    public void setReleaseYear(Integer releaseYear) {
+        this.releaseYearField.setText(releaseYear.toString());
+    }
+
+    @Override
+    public void setAlbumCover(BufferedImage cover) {
+        Image fxImage = SwingFXUtils.toFXImage(cover, null);
+        this.albumCoverImageView.setImage(fxImage);
     }
 }

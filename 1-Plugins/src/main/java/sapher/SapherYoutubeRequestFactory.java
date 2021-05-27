@@ -4,7 +4,7 @@ import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLException;
 import com.sapher.youtubedl.mapper.VideoInfo;
 import model.youtube.FullVideoInfo;
-import somepackage.YoutubeException;
+import extraction.ExtractionException;
 
 import java.util.Optional;
 
@@ -21,23 +21,21 @@ public class SapherYoutubeRequestFactory implements YoutubeRequestFactory {
     }
 
     @Override
-    public FullVideoInfo getFullVideoInfo(String id) throws YoutubeException {
-//        TODO fetch thumbnail
+    public FullVideoInfo getFullVideoInfo(String id) throws ExtractionException {
         try {
             VideoInfo videoInfo = YoutubeDL.getVideoInfo(id);
             return new FullVideoInfo(
                     videoInfo.id,
                     videoInfo.title,
                     videoInfo.thumbnail,
-                    videoInfo.description,
                     Optional.ofNullable(videoInfo.track),
                     Optional.ofNullable(videoInfo.artist),
                     Optional.ofNullable(videoInfo.album),
-                    Optional.ofNullable(videoInfo.releaseDate)
+                    Optional.ofNullable(videoInfo.releaseYear)
             );
         } catch (YoutubeDLException e) {
             e.printStackTrace();
-            throw new YoutubeException(e);
+            throw new ExtractionException(e);
         }
     }
 }

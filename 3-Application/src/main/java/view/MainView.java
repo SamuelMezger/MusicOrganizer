@@ -1,7 +1,6 @@
 package view;
 
 import event.GuiEventHandler;
-import somepackage.MyDownloadProgressCallback;
 
 public interface MainView {
 

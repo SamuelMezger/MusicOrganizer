@@ -3,8 +3,8 @@ package sapher;
 import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLException;
 import com.sapher.youtubedl.YoutubeDLRequest;
-import somepackage.MyDownloadProgressCallback;
-import somepackage.YoutubeException;
+import extraction.MyDownloadProgressCallback;
+import extraction.ExtractionException;
 
 public class SapherYoutubeRequest implements YoutubeRequest {
     private final YoutubeDLRequest youtubeDLRequest;
@@ -26,21 +26,21 @@ public class SapherYoutubeRequest implements YoutubeRequest {
         this.youtubeDLRequest.setOption(key, value);
     }
 
-    public YoutubeResponse execute() throws YoutubeException {
+    public YoutubeResponse execute() throws ExtractionException {
         try {
             return new SapherYoutubeResponse(YoutubeDL.execute(this.youtubeDLRequest));
         } catch (YoutubeDLException e) {
             e.printStackTrace();
-            throw new YoutubeException(e);
+            throw new ExtractionException(e);
         }
     }
 
-    public YoutubeResponse execute(MyDownloadProgressCallback myDownloadProgressCallback) throws YoutubeException {
+    public YoutubeResponse execute(MyDownloadProgressCallback myDownloadProgressCallback) throws ExtractionException {
         try {
             return new SapherYoutubeResponse(YoutubeDL.execute(this.youtubeDLRequest, myDownloadProgressCallback::onProgressUpdate));
         } catch (YoutubeDLException e) {
             e.printStackTrace();
-            throw new YoutubeException(e);
+            throw new ExtractionException(e);
         }
     }
 }

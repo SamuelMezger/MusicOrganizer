@@ -1,7 +1,9 @@
 package view;
 
 import event.GuiEventHandler;
-import somepackage.MyDownloadProgressCallback;
+import extraction.MyDownloadProgressCallback;
+
+import java.awt.image.BufferedImage;
 
 public interface TrackEditorView extends MyDownloadProgressCallback {
 
@@ -21,5 +23,7 @@ public interface TrackEditorView extends MyDownloadProgressCallback {
 
     void setArtist(String artist);
 
-    void setReleaseDate(String releaseDate);
+    void setReleaseYear(Integer releaseYear);
+
+    void setAlbumCover(BufferedImage cover);
 }

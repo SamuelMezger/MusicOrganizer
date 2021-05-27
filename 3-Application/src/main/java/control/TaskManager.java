@@ -1,6 +1,6 @@
 package control;
 
-import somepackage.MyDownloadProgressCallback;
+import extraction.MyDownloadProgressCallback;
 
 import java.util.Optional;
 import java.util.concurrent.*;

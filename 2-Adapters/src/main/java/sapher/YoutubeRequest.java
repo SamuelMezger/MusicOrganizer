@@ -1,11 +1,11 @@
 package sapher;
 
-import somepackage.MyDownloadProgressCallback;
-import somepackage.YoutubeException;
+import extraction.MyDownloadProgressCallback;
+import extraction.ExtractionException;
 
 public interface YoutubeRequest {
      void setOption(String key);
      void setOption(String key, String value);
-     YoutubeResponse execute() throws YoutubeException;
-     YoutubeResponse execute(MyDownloadProgressCallback myDownloadProgressCallback) throws YoutubeException;
+     YoutubeResponse execute() throws ExtractionException;
+     YoutubeResponse execute(MyDownloadProgressCallback myDownloadProgressCallback) throws ExtractionException;
 }
