@@ -1,5 +1,7 @@
 package sapher;
 
+import extraction.youtube.BasicVideoInfoParser;
+import extraction.youtube.JacksonVideoInfoParser;
 import org.junit.Assert;
 import org.junit.Test;
 import model.youtube.BasicVideoInfo;

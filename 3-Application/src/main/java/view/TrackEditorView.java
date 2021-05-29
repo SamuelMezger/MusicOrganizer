@@ -17,13 +17,17 @@ public interface TrackEditorView extends MyDownloadProgressCallback {
 
     void setVideoTitle(String videoTitle);
 
-    void setAlbum(String album);
+    void setAlbumCover(BufferedImage cover);
 
     void setTitle(String title);
 
     void setArtist(String artist);
 
+    void setAlbum(String album);
+
+    void setTrackNumber(Integer releaseYear);
+
     void setReleaseYear(Integer releaseYear);
 
-    void setAlbumCover(BufferedImage cover);
+    void setGenre(String genre);
 }

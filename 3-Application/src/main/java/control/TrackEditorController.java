@@ -1,10 +1,13 @@
 package control;
 
+import model.metadata.Metadata;
 import model.youtube.BasicVideoInfo;
-import model.Metadata;
 import extraction.*;
+import repository.MetadataRepository;
 import view.TrackEditorView;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CompletionException;
 
 public class TrackEditorController implements MyDownloadProgressCallback {
@@ -12,17 +15,22 @@ public class TrackEditorController implements MyDownloadProgressCallback {
     private final TaskManager taskManager;
     private final YoutubeExtractor youtubeExtractor;
     private final BasicVideoInfo basicVideo;
+    private final List<MetadataFinder> metadataFinders;
+    private final MetadataRepository metadataRepository;
 
     public TrackEditorController(BasicVideoInfo basicVideo,
                                  TrackEditorView trackView,
                                  TaskManager taskManager,
-                                 YoutubeExtractor youtubeExtractor
+                                 YoutubeExtractor youtubeExtractor,
+                                 List<MetadataFinder> metadataFinders
     ) {
         this.basicVideo = basicVideo;
         this.taskManager = taskManager;
         this.trackView = trackView;
         this.youtubeExtractor = youtubeExtractor;
+        this.metadataFinders = metadataFinders;
         this.trackView.addDownloadButtonListener(actionEvent -> this.startAudioDownload());
+        this.metadataRepository = new MetadataRepository();
 
         trackView.setVideoTitle(
                 this.basicVideo.getVideoTitle()
@@ -36,13 +44,19 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                 .doInBackground(() -> {
                     try {
                         return this.youtubeExtractor.getFullVideoInfo(this.basicVideo.getVideoId());
-                    } catch (ExtractionException e) {
+                    } catch (ExtractionException | IOException e) {
                         throw new CompletionException(e);
                     }
                 })
-                .whenCompletedSuccessful(this::updateTrackView)
-                .ifItFailsHandle(
-                        (throwable) -> this.trackView.showVideoNotAvailable("new " + throwable.getMessage())
+                .whenCompletedSuccessful(metadata -> {
+                    this.metadataRepository.addFallback(metadata);
+                    this.updateTrackView(metadata);
+                    this.startMetadataSearch();
+                })
+                .ifItFailsHandle( throwable -> {
+                            throwable.printStackTrace();
+                            this.trackView.showVideoNotAvailable("new " + throwable.getMessage());
+                        }
                 )
                 .submit();
     }
@@ -55,7 +69,10 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                     public Void get() {
                         try {
 //                            TODO pass current working directory as absolute path to YoutubeExtractor constructor
-                            youtubeExtractor.downloadAudio(basicVideo.getVideoId(), "/tmp/test/", this);
+                            TrackEditorController.this.youtubeExtractor.downloadAudio(
+                                    TrackEditorController.this.basicVideo.getVideoId(),
+                                    "/tmp/test/",
+                                    this);
                             return null;
                         } catch (ExtractionException e) {
                             throw new CompletionException(e);
@@ -63,39 +80,50 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                     }
                 })
                 .ifItFailsHandle(throwable -> {
+                    throwable.printStackTrace();
                     this.trackView.enableDownloadButton();
                     this.trackView.showVideoNotAvailable(throwable.getMessage());
                 })
                 .submit();
     }
-//
-//    private void startMetadataSearch() {
-//        for (MetadataProvider provider : this.metadataProvider) {
-//            this.taskManager
-//                    .doInBackground(() -> provider.searchFor(this.basicVideo.getVideoTitle()))
-//                    .whenCompletedSuccessful(t -> {
-//                        for (MetadataClass metadata : t) {
-//                            this.addSearchResult(metadata);
-//                        }
-//                    });
-//        }
-//    }
-//
-//    private void addSearchResult(MetadataClass metadata) {
-//
-//        for (Map.Entry entry : metadata.asMap().entrySet()) {
-//            if (entry.uncertenty < current.uncertenty)
-//                this.trackView.setAlbumCover(entry);
-//
-//        }
-//    }
 
-    private void updateTrackView(Metadata fullVideoInfo) {
-        fullVideoInfo.getTitle().ifPresent(this.trackView::setTitle);
-        fullVideoInfo.getAlbum().ifPresent(this.trackView::setAlbum);
-        fullVideoInfo.getArtist().ifPresent(this.trackView::setArtist);
-        fullVideoInfo.getReleaseYear().ifPresent(this.trackView::setReleaseYear);
-        fullVideoInfo.getCover().ifPresent(this.trackView::setAlbumCover);
+    private void startMetadataSearch() {
+        Metadata currentBestMetadata = this.metadataRepository.getProgrammsBest();
+        SearchTermBuilder searchTermBuilder = new SearchTermBuilder();
+        currentBestMetadata.getTitle().ifPresent(title -> searchTermBuilder.add(title.getValue()));
+        currentBestMetadata.getArtist().ifPresent(artist -> searchTermBuilder.add(artist.getValue()));
+        String searchTerm = searchTermBuilder.toString();
+        System.out.println(searchTerm);
+
+        for (MetadataFinder finder : this.metadataFinders) {
+            this.taskManager
+                    .doInBackground(() -> {
+                        try {
+                            return finder.searchFor(searchTerm);
+                        } catch (IOException | ExtractionException e) {
+                            throw new CompletionException(e);
+                        }
+                    })
+                    .whenCompletedSuccessful(t -> {
+                        for (Metadata metadata : t) {
+                            this.metadataRepository.add(metadata);
+                        }
+                        this.updateTrackView(this.metadataRepository.getProgrammsBest());
+                    })
+                    .ifItFailsHandle(throwable -> throwable.printStackTrace())
+                    .submit();
+        }
+    }
+
+
+    private void updateTrackView(Metadata metadata) {
+        metadata.getCover().ifPresent(cover -> this.trackView.setAlbumCover(cover.getValue()));
+        metadata.getTitle().ifPresent(title -> this.trackView.setTitle(title.getValue()));
+        metadata.getArtist().ifPresent(artist -> this.trackView.setArtist(artist.getValue()));
+        metadata.getAlbum().ifPresent(album -> this.trackView.setAlbum(album.getValue()));
+        metadata.getTrackNumber().ifPresent(trackNumber -> this.trackView.setTrackNumber(trackNumber.getValue()));
+        metadata.getReleaseYear().ifPresent(releaseYear -> this.trackView.setReleaseYear(releaseYear.getValue()));
+        metadata.getGenre().ifPresent(genre -> this.trackView.setGenre(genre.getValue()));
     }
 
 

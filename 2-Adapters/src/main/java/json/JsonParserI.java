@@ -1,31 +1,28 @@
 package json;
 
+import extraction.ExtractionException;
+
+
 public interface JsonParserI {
-    JsonObjectI jsonObjectFrom(String s) throws JsonParserAdapterException;
+    JsonObjectI jsonObjectFrom(String s) throws ExtractionException;
 
     interface JsonObjectI {
-        JsonArrayI getArray(String key);
+        JsonArrayI getArray(String key) throws ExtractionException;
 
-        String getString(String key);
+        String getString(String key) throws ExtractionException;
 
-        int getInt(String key);
+        int getInt(String key) throws ExtractionException;
     }
 
     interface JsonArrayI {
-        JsonArrayI getArray(int key);
+        JsonArrayI getArray(int key) throws ExtractionException;
 
-        String getString(int key);
+        String getString(int key) throws ExtractionException;
 
-        JsonObjectI getObject(int key);
+        JsonObjectI getObject(int key) throws ExtractionException;
 
-        int getInt(int key);
-    }
+        int getInt(int key) throws ExtractionException;
 
-    class JsonParserAdapterException extends Throwable {
-        private final Exception jsonParserException;
-
-        public JsonParserAdapterException(Exception e) {
-            this.jsonParserException = e;
-        }
+        int size();
     }
 }

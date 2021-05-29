@@ -12,8 +12,8 @@ public class TaskManager {
     private final ExecutorService executor;
     private final TaskFactory taskFactory;
 
-    public TaskManager(TaskFactory taskFactory) {
-        this.executor = Executors.newFixedThreadPool(5);
+    public TaskManager(TaskFactory taskFactory, int numberOfThreads) {
+        this.executor = Executors.newFixedThreadPool(numberOfThreads);
         this.taskFactory = taskFactory;
     }
 

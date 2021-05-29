@@ -1,4 +1,4 @@
-package sapher;
+package extraction.youtube;
 
 import extraction.MyDownloadProgressCallback;
 import extraction.ExtractionException;

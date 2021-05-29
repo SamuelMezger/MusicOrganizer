@@ -19,7 +19,7 @@ public class YoutubeDLJavaIntegrationTest {
     public void MusicInVid_extractable() throws YoutubeDLException {
         VideoInfo videoInfo = YoutubeDL.getVideoInfo(MusicVid_TheFatRat_RuleTheWorld_ID);
         Assert.assertEquals(
-                "YoutubeDL should be able to extract metadata from the 'Music in this Video Section'",
+                "YoutubeDL should be able to extract model.metadata from the 'Music in this Video Section'",
                 "Rule The World, TheFatRat, Rule The World",
                 String.format("%s, %s, %s", videoInfo.track, videoInfo.artist, videoInfo.album)
         );
@@ -29,7 +29,7 @@ public class YoutubeDLJavaIntegrationTest {
     public void YTMusic_description_extractable() throws YoutubeDLException {
         VideoInfo videoInfo = YoutubeDL.getVideoInfo(YTMusic_TheFatRat_RuleTheWorld_ID);
         Assert.assertEquals(
-                "YoutubeDL should be able to extract metadata from the description of YTMusic tracks",
+                "YoutubeDL should be able to extract model.metadata from the description of YTMusic tracks",
                 "Rule the World, TheFatRat, AleXa, Rule the World",
                 String.format("%s, %s, %s", videoInfo.track, videoInfo.artist, videoInfo.album)
         );

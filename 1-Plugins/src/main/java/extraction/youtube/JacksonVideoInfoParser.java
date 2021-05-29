@@ -1,4 +1,4 @@
-package sapher;
+package extraction.youtube;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;

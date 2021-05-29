@@ -1,17 +1,17 @@
-package sapher;
+package extraction.youtube;
 
 import extraction.Downloader;
 import extraction.MyDownloadProgressCallback;
 import extraction.YoutubeExtractor;
 import extraction.ExtractionException;
 import image.Crop;
-import model.Uncertainty;
+import model.metadata.Metadata;
+import model.metadata.Metadatum;
 import model.youtube.BasicVideoInfo;
-import model.Metadata;
 import model.youtube.FullVideoInfo;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +46,7 @@ public class SapherYoutubeExtractor implements YoutubeExtractor {
                     .map(Optional::get)
                     .collect(Collectors.toList());
         } else {
-            throw new extraction.ExtractionException("Could not find any videos");
+            throw new ExtractionException("Could not find any videos");
         }
     }
 
@@ -62,40 +62,25 @@ public class SapherYoutubeExtractor implements YoutubeExtractor {
     }
     
     @Override
-    public Metadata getFullVideoInfo(String id) throws ExtractionException {
+    public Metadata getFullVideoInfo(String id) throws ExtractionException, IOException {
         FullVideoInfo videoInfo = this.youtubeRequestFactory.getFullVideoInfo(id);
 
-        BufferedImage thumbnail = null;
-        try {
-            thumbnail = Crop.centerSquare(
-                    this.downloader.getOkImage(videoInfo.getVideoThumbnailURL().replace("maxresdefault", "mqdefault"))
-            );
-//            TODO Fix exception handling
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        List<Metadatum> info = new ArrayList<>();
 
-        int uncertainty;
-        if (videoInfo.getReleaseYear().isPresent()) uncertainty = Uncertainty.YT_MUSIC;
-        else if (videoInfo.getTitle().isPresent()) uncertainty = Uncertainty.MUSIC_IN_VID;
-        else uncertainty = Uncertainty.UNCERTAIN;
+        info.add(new Metadatum.Cover(Crop.centerSquare(
+                this.downloader.getOkImage(videoInfo.getVideoThumbnailURL()
+                        .replace("maxresdefault", "mqdefault"))
+        )));
 
-        Optional<Integer> releaseYear;
-        if (videoInfo.getReleaseYear().isPresent()) releaseYear = Optional.of(Integer.parseInt(videoInfo.getReleaseYear().get()));
-        else releaseYear = Optional.empty();
+        info.add(new Metadatum.Title(videoInfo.getTitle().orElse(videoInfo.getVideoTitle())));
 
-        Optional<String> title = Optional.of(videoInfo.getTitle().orElse(videoInfo.getVideoTitle()));
-        Optional<String> artist = videoInfo.getArtist();
-        Optional<String> album = videoInfo.getAlbum();
+        videoInfo.getArtist().ifPresent(artistString -> info.add(new Metadatum.Artist(artistString)));
+        videoInfo.getAlbum().ifPresent(albumString -> info.add(new Metadatum.Album(albumString)));
 
-        return new Metadata(
-                Optional.of(thumbnail),
-                title,
-                artist,
-                album,
-                Optional.empty(),
-                releaseYear,
-                Optional.empty()
+        videoInfo.getReleaseYear().ifPresent(
+                yearString -> info.add(new Metadatum.ReleaseYear(Integer.parseInt(yearString)))
         );
+
+        return new Metadata(info);
     }
 }

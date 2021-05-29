@@ -1,4 +1,4 @@
-package sapher;
+package extraction.youtube;
 
 import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLException;

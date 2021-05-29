@@ -24,9 +24,9 @@ import java.util.ResourceBundle;
 
 public class FxTrackEditorView extends VBox implements TrackEditorView, Initializable {
 
-    @FXML private ImageView albumCoverImageView;
     @FXML private FxTrackEditorView root;
     @FXML private Button albumCoverButton;
+    @FXML private ImageView albumCoverImageView;
     @FXML private Label videoTitleLabel;
     @FXML private TextField trackTitleField;
     @FXML private TextField artistField;
@@ -108,8 +108,9 @@ public class FxTrackEditorView extends VBox implements TrackEditorView, Initiali
     }
 
     @Override
-    public void setAlbum(String album) {
-        this.albumField.setText(album);
+    public void setAlbumCover(BufferedImage cover) {
+        Image fxImage = SwingFXUtils.toFXImage(cover, null);
+        this.albumCoverImageView.setImage(fxImage);
     }
 
     @Override
@@ -123,13 +124,22 @@ public class FxTrackEditorView extends VBox implements TrackEditorView, Initiali
     }
 
     @Override
+    public void setAlbum(String album) {
+        this.albumField.setText(album);
+    }
+
+    @Override
+    public void setTrackNumber(Integer trackNumber) {
+        this.trackNumberField.setText(trackNumber.toString());
+    }
+
+    @Override
     public void setReleaseYear(Integer releaseYear) {
         this.releaseYearField.setText(releaseYear.toString());
     }
 
     @Override
-    public void setAlbumCover(BufferedImage cover) {
-        Image fxImage = SwingFXUtils.toFXImage(cover, null);
-        this.albumCoverImageView.setImage(fxImage);
+    public void setGenre(String genre) {
+        this.genreField.setText(genre);
     }
 }

@@ -1,5 +1,6 @@
 package nanojson;
 
+import extraction.ExtractionException;
 import json.JsonParserI;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,14 +22,22 @@ public class JsonParserAdapterTest {
             "\n";
 
     @Test
-    public void jsonObjectFrom() throws JsonParserI.JsonParserAdapterException {
-        JsonParserI.JsonObjectI jsonObject = new JsonParserAdapter().jsonObjectFrom(this.itunesResponseBody).getArray("results").getObject(1);
-        String artist = jsonObject.getString("artistName");
+    public void jsonObjectFrom() throws ExtractionException {
+        JsonParserI.JsonObjectI jsonResult = new JsonParserAdapter().jsonObjectFrom(this.itunesResponseBody).getArray("results").getObject(1);
+        String artist = jsonResult.getString("artistName");
         Assert.assertEquals("Mariya Takeuchi", artist);
-        String trackName = jsonObject.getString("trackName");
+        String trackName = jsonResult.getString("trackName");
         Assert.assertEquals("Plastic Love", trackName);
-        int trackNr = jsonObject.getInt("trackNumber");
+        int trackNr = jsonResult.getInt("trackNumber");
         Assert.assertEquals(9, trackNr);
+    }
+    @Test
+    public void forEachTest() throws ExtractionException {
+        JsonParserI.JsonArrayI jsonResult = new JsonParserAdapter().jsonObjectFrom(this.itunesResponseBody).getArray("results");
+//        for (Object jsonObject : jsonResult) {
+//            System.out.println("yay");
+//        }
+
     }
 
 }

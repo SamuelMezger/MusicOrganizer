@@ -14,11 +14,13 @@ public class Controller {
     private final MainView view;
     private final List<TrackEditorController> trackControllers;
     private final TaskManager taskManager;
+    private final List<MetadataFinder> metadataFinders;
 
-    public Controller(MainView view, TaskManager taskManager, YoutubeExtractor youtubeExtractor) {
+    public Controller(MainView view, TaskManager taskManager, YoutubeExtractor youtubeExtractor, List<MetadataFinder> metadataFinders) {
         this.view = view;
         this.youtubeExtractor = youtubeExtractor;
         this.taskManager = taskManager;
+        this.metadataFinders = metadataFinders;
 
         this.view.addGetPLButtonListener(actionEvent -> {
             String url = view.getPlUrl();
@@ -27,9 +29,16 @@ public class Controller {
 
         this.trackControllers = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
-            BasicVideoInfo basicVideoInfo = new BasicVideoInfo("OJdG8wsU8cw", "Rule the world");
+//            BasicVideoInfo basicVideoInfo = new BasicVideoInfo("OJdG8wsU8cw", "Rule the world");
+            BasicVideoInfo basicVideoInfo = new BasicVideoInfo("JQGRg8XBnB4", "MOMOLAND");
             TrackEditorView trackView = this.view.addTrackEditor();
-            this.trackControllers.add(new TrackEditorController(basicVideoInfo, trackView, this.taskManager, this.youtubeExtractor));
+            this.trackControllers.add(new TrackEditorController(
+                    basicVideoInfo,
+                    trackView,
+                    this.taskManager,
+                    this.youtubeExtractor,
+                    this.metadataFinders
+            ));
         }
     }
 
@@ -47,7 +56,13 @@ public class Controller {
                 .whenCompletedSuccessful(basicVideoInfos -> {
                     for (BasicVideoInfo basicInfo : basicVideoInfos) {
                         TrackEditorView trackView = this.view.addTrackEditor();
-                        this.trackControllers.add(new TrackEditorController(basicInfo, trackView, this.taskManager, this.youtubeExtractor));
+                        this.trackControllers.add(new TrackEditorController(
+                                basicInfo,
+                                trackView,
+                                this.taskManager,
+                                this.youtubeExtractor,
+                                this.metadataFinders
+                        ));
                     }
                 })
                 .ifItFailsHandle(throwable -> {
