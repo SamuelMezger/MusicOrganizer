@@ -8,14 +8,15 @@ import org.junit.Assert;
 import org.junit.Test;
 import extraction.*;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
-public class SapherYoutubeExtractorTest {
+public class YtDLYoutubeExtractorTest {
 
     private final static String MusicVid_TheFatRat_RuleTheWorld_ID = "OJdG8wsU8cw"; 
     private final static String MusicVid_TheFatRat_RuleTheWorld_Title = "TheFatRat & AleXa (알렉사) - Rule The World";
-    private static final String flatPlaylistRawOut = "some Info in Json\nother Info in Json\nnot parsable Json";
+    private static final String flatPlaylistRawOut = "some Info in Json\nother Info in Json";
 
 
     @Test
@@ -24,7 +25,7 @@ public class SapherYoutubeExtractorTest {
 
         YoutubeRequestFactory youtubeRequestFactory = EasyMock.createMock(YoutubeRequestFactory.class);
         Downloader downloader = EasyMock.createMock(Downloader.class);
-        YoutubeExtractor youtubeExtractor = new SapherYoutubeExtractor(youtubeRequestFactory, EasyMock.createMock(BasicVideoInfoParser.class), downloader);
+        YoutubeExtractor youtubeExtractor = new YtDLYoutubeExtractor(youtubeRequestFactory, EasyMock.createMock(BasicVideoInfoParser.class), downloader);
 
         Capture<MyDownloadProgressCallback> cap = EasyMock.newCapture();
 
@@ -40,13 +41,12 @@ public class SapherYoutubeExtractorTest {
         EasyMock.replay(youtubeRequest);
         EasyMock.replay(youtubeResponse);
 
-        youtubeExtractor.downloadAudio(MusicVid_TheFatRat_RuleTheWorld_ID, "/tmp/", new MyDownloadProgressCallback() {
-            @Override
-            public void onProgressUpdate(float progress, long etaInSeconds) {
+        try {
+            youtubeExtractor.downloadAudio(MusicVid_TheFatRat_RuleTheWorld_ID, "/tmp/", (progress, etaInSeconds) -> {
                 System.out.println(progress + "%");
                 downloadProgress[0] = progress;
-            }
-        });
+            });
+        } catch (FileNotFoundException expected) {}
 
         MyDownloadProgressCallback cb = cap.getValue();
         cb.onProgressUpdate(0, 60);
@@ -63,7 +63,7 @@ public class SapherYoutubeExtractorTest {
         YoutubeRequestFactory youtubeRequestFactory = EasyMock.createMock(YoutubeRequestFactory.class);
         BasicVideoInfoParser basicVideoInfoParser = EasyMock.createMock(BasicVideoInfoParser.class);
         Downloader downloader = EasyMock.createMock(Downloader.class);
-        YoutubeExtractor youtubeExtractor = new SapherYoutubeExtractor(youtubeRequestFactory, basicVideoInfoParser, downloader);
+        YoutubeExtractor youtubeExtractor = new YtDLYoutubeExtractor(youtubeRequestFactory, basicVideoInfoParser, downloader);
 
         YoutubeRequest youtubeRequest = EasyMock.createMock(YoutubeRequest.class);
         EasyMock.expect(youtubeRequestFactory.makeRequest("someID")).andReturn(youtubeRequest);
@@ -76,10 +76,9 @@ public class SapherYoutubeExtractorTest {
         EasyMock.expect(youtubeResponse.getOut()).andReturn(flatPlaylistRawOut);
         EasyMock.expect(youtubeRequest.execute()).andReturn(youtubeResponse);
         BasicVideoInfo someInfo = new BasicVideoInfo("someID", "someTitle");
-        EasyMock.expect(basicVideoInfoParser.fromJson("some Info in Json")).andReturn(Optional.of(someInfo));
+        EasyMock.expect(basicVideoInfoParser.fromJson("some Info in Json")).andReturn(someInfo);
         BasicVideoInfo otherInfo = new BasicVideoInfo("otherID", "otherTitle");
-        EasyMock.expect(basicVideoInfoParser.fromJson("other Info in Json")).andReturn(Optional.of(otherInfo));
-        EasyMock.expect(basicVideoInfoParser.fromJson("not parsable Json")).andReturn(Optional.empty());
+        EasyMock.expect(basicVideoInfoParser.fromJson("other Info in Json")).andReturn(otherInfo);
 
         EasyMock.replay(youtubeRequestFactory);
         EasyMock.replay(basicVideoInfoParser);

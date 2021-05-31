@@ -29,7 +29,7 @@ public class MetadataSorterTest {
                 new MetadataField.Artist("good")
         )));
 
-        assertEquals(repo.getProgrammsBest(), new Metadata(Arrays.asList(
+        assertEquals(repo.getCurrentChoice(), new Metadata(Arrays.asList(
                 new MetadataField.Title("best"),
                 new MetadataField.Artist("good"),
                 new MetadataField.Album("bad")
@@ -58,7 +58,7 @@ public class MetadataSorterTest {
         )));
 
 
-        assertEquals(repo.getFinalChoice(), new Metadata(Arrays.asList(
+        assertEquals(repo.getCurrentChoice(), new Metadata(Arrays.asList(
                 new MetadataField.Title("user"),
 //              No artist
                 new MetadataField.Album("user")
@@ -69,7 +69,7 @@ public class MetadataSorterTest {
     @Test
     public void testEmpty() {
         MetadataSorter repo = new MetadataSorter();
-        assertEquals(repo.getProgrammsBest(), new Metadata(Collections.emptyList()));
+        assertEquals(repo.getCurrentChoice(), new Metadata(Collections.emptyList()));
     }
 
 }

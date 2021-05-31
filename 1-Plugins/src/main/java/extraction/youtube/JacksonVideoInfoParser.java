@@ -4,23 +4,22 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import extraction.ExtractionException;
 import model.youtube.BasicVideoInfo;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class JacksonVideoInfoParser implements BasicVideoInfoParser {
     @Override
-    public Optional<BasicVideoInfo> fromJson(String flatVideoInfoJson) {
+    public BasicVideoInfo fromJson(String flatVideoInfoJson) throws ExtractionException {
         // Parse result
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonBasicVideoInfo jsonInfo = objectMapper.readValue(flatVideoInfoJson, JsonBasicVideoInfo.class);
-            return Optional.of(new BasicVideoInfo(jsonInfo.getVideoId(), jsonInfo.getVideoTitle()));
+            return new BasicVideoInfo(jsonInfo.getVideoId(), jsonInfo.getVideoTitle());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ExtractionException(e);
         }
-        return Optional.empty();
     }
 
     private static class JsonBasicVideoInfo {
@@ -47,5 +46,4 @@ public class JacksonVideoInfoParser implements BasicVideoInfoParser {
             return videoTitle;
         }
     }
-    
 }

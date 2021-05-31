@@ -10,41 +10,49 @@ import model.metadata.MetadataField;
 import model.youtube.BasicVideoInfo;
 import model.youtube.FullVideoInfo;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-public class SapherYoutubeExtractor implements YoutubeExtractor {
+public class YtDLYoutubeExtractor implements YoutubeExtractor {
 
     private final YoutubeRequestFactory youtubeRequestFactory;
     private final BasicVideoInfoParser basicVideoInfoParser;
     private final Downloader downloader;
 
-    public SapherYoutubeExtractor(YoutubeRequestFactory youtubeRequestFactory, BasicVideoInfoParser basicVideoInfoParser, Downloader downloader) {
+    public YtDLYoutubeExtractor(YoutubeRequestFactory youtubeRequestFactory, BasicVideoInfoParser basicVideoInfoParser, Downloader downloader) {
         this.youtubeRequestFactory = youtubeRequestFactory;
         this.basicVideoInfoParser = basicVideoInfoParser;
         this.downloader = downloader;
     }
 
     @Override
-    public void downloadAudio(String videoId, String destinationFolder, MyDownloadProgressCallback myDownloadProgressCallback) throws ExtractionException {
-        YoutubeRequest downloadRequest = this.youtubeRequestFactory.makeRequest(videoId, destinationFolder);
+    public File downloadAudio(String videoId, String destinationFolderPath, MyDownloadProgressCallback myDownloadProgressCallback) throws ExtractionException, FileNotFoundException {
+        YoutubeRequest downloadRequest = this.youtubeRequestFactory.makeRequest(videoId, destinationFolderPath);
         downloadRequest.setOption("format", "m4a");
         downloadRequest.execute(myDownloadProgressCallback);
+//        If there is no exception thrown to this point the file should be there,
+//        but if the file was already downloaded youtube-dl doesn't update the progress
+//        so we do it manually
+        myDownloadProgressCallback.onProgressUpdate(100, 0);
+        File folder = new File(destinationFolderPath);
+        return Arrays.stream(folder.listFiles((dir, name) -> name.endsWith(videoId + ".m4a"))).findFirst()
+                .orElseThrow(FileNotFoundException::new);
     }
 
     @Override
     public List<BasicVideoInfo> getBasicVideoInfos(String playListId) throws ExtractionException {
         String flatPlayListRawOutput = this.getFlatPlayListRawOutput(playListId);
         if (!flatPlayListRawOutput.isEmpty()) {
-            return Arrays.stream(flatPlayListRawOutput.split("\n"))
-                    .map(this.basicVideoInfoParser::fromJson)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toList());
+            List<BasicVideoInfo> basicInfos = new ArrayList<>();
+            for (String json : flatPlayListRawOutput.split("\n")) {
+                BasicVideoInfo basicVideoInfo = this.basicVideoInfoParser.fromJson(json);
+                basicInfos.add(basicVideoInfo);
+            }
+            return basicInfos;
         } else {
             throw new ExtractionException("Could not find any videos");
         }

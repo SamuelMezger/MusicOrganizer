@@ -31,7 +31,7 @@ public final class CreateTask<T> {
         return new SubmitableTask<>();
     }
 
-    public class SubmitableTask<U>{
+    public class SubmitableTask<U> {
         private SubmitableTask() {}
 
         public SubmitableTask<U> whenCompletedSuccessful(Consumer<? super T> onCompletedUiAction) {

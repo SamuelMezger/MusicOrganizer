@@ -1,7 +1,9 @@
 package control;
 
+import extraction.ExtractionException;
+import extraction.MetadataFinder;
+import extraction.YoutubeExtractor;
 import model.youtube.BasicVideoInfo;
-import extraction.*;
 import view.MainView;
 import view.TrackEditorView;
 
@@ -10,11 +12,12 @@ import java.util.List;
 import java.util.concurrent.CompletionException;
 
 public class Controller {
-    private final YoutubeExtractor youtubeExtractor;
     private final MainView view;
-    private final List<TrackEditorController> trackControllers;
     private final TaskManager taskManager;
+    private final YoutubeExtractor youtubeExtractor;
     private final List<MetadataFinder> metadataFinders;
+    private final List<TrackEditorController> trackControllers = new ArrayList<>();;
+    private final List<TrackSyncer> trackSyncers = new ArrayList<>();
 
     public Controller(MainView view, TaskManager taskManager, YoutubeExtractor youtubeExtractor, List<MetadataFinder> metadataFinders) {
         this.view = view;
@@ -27,17 +30,15 @@ public class Controller {
             this.startPlSync(url);
         });
 
-        this.trackControllers = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
             BasicVideoInfo basicVideoInfo = new BasicVideoInfo("OJdG8wsU8cw", "Rule the world");
 //            BasicVideoInfo basicVideoInfo = new BasicVideoInfo("JQGRg8XBnB4", "MOMOLAND");
             TrackEditorView trackView = this.view.addTrackEditor();
+            TrackSyncer trackSyncer = new TrackSyncer(basicVideoInfo, this.youtubeExtractor, this.metadataFinders);
             this.trackControllers.add(new TrackEditorController(
-                    basicVideoInfo,
+                    trackSyncer,
                     trackView,
-                    this.taskManager,
-                    this.youtubeExtractor,
-                    this.metadataFinders
+                    this.taskManager
             ));
         }
     }
@@ -63,12 +64,12 @@ public class Controller {
                 .whenCompletedSuccessful(basicVideoInfos -> {
                     for (BasicVideoInfo basicInfo : basicVideoInfos) {
                         TrackEditorView trackView = this.view.addTrackEditor();
+                        TrackSyncer trackSyncer = new TrackSyncer(basicInfo, this.youtubeExtractor, this.metadataFinders);
+                        this.trackSyncers.add(trackSyncer);
                         this.trackControllers.add(new TrackEditorController(
-                                basicInfo,
+                                trackSyncer,
                                 trackView,
-                                this.taskManager,
-                                this.youtubeExtractor,
-                                this.metadataFinders
+                                this.taskManager
                         ));
                     }
                 })
