@@ -1,13 +1,15 @@
 package control;
 
 import model.metadata.Metadata;
+import model.metadata.MetadataField;
+import model.metadata.MetadataKey;
 import model.youtube.BasicVideoInfo;
 import extraction.*;
-import repository.MetadataRepository;
+import repository.MetadataSorter;
 import view.TrackEditorView;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletionException;
 
 public class TrackEditorController implements MyDownloadProgressCallback {
@@ -16,7 +18,7 @@ public class TrackEditorController implements MyDownloadProgressCallback {
     private final YoutubeExtractor youtubeExtractor;
     private final BasicVideoInfo basicVideo;
     private final List<MetadataFinder> metadataFinders;
-    private final MetadataRepository metadataRepository;
+    private final MetadataSorter metadataSorter;
 
     public TrackEditorController(BasicVideoInfo basicVideo,
                                  TrackEditorView trackView,
@@ -29,8 +31,9 @@ public class TrackEditorController implements MyDownloadProgressCallback {
         this.trackView = trackView;
         this.youtubeExtractor = youtubeExtractor;
         this.metadataFinders = metadataFinders;
-        this.trackView.addDownloadButtonListener(actionEvent -> this.startAudioDownload());
-        this.metadataRepository = new MetadataRepository();
+        this.trackView.setDownloadButtonListener(this::startAudioDownload);
+        this.trackView.setEditorValuesChangedListener(this::getValuesFromEditor);
+        this.metadataSorter = new MetadataSorter();
 
         trackView.setVideoTitle(
                 this.basicVideo.getVideoTitle()
@@ -48,16 +51,16 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                         throw new CompletionException(e);
                     }
                 })
-                .whenCompletedSuccessful(metadata -> {
-                    this.metadataRepository.addFallback(metadata);
-                    this.updateTrackView(metadata);
-                    this.startMetadataSearch();
-                })
                 .ifItFailsHandle( throwable -> {
                             throwable.printStackTrace();
                             this.trackView.showVideoNotAvailable("new " + throwable.getMessage());
                         }
                 )
+                .whenCompletedSuccessful(metadata -> {
+                    this.metadataSorter.addFallback(metadata);
+                    this.updateTrackView(metadata);
+                    this.startMetadataSearch();
+                })
                 .submit();
     }
 
@@ -84,15 +87,26 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                     this.trackView.enableDownloadButton();
                     this.trackView.showVideoNotAvailable(throwable.getMessage());
                 })
+                .whenCompletedSuccessful(unused -> {
+//
+                })
                 .submit();
     }
 
     private void startMetadataSearch() {
-        Metadata currentBestMetadata = this.metadataRepository.getProgrammsBest();
-        SearchTermBuilder searchTermBuilder = new SearchTermBuilder();
-        currentBestMetadata.getTitle().ifPresent(title -> searchTermBuilder.add(title.getValue()));
-        currentBestMetadata.getArtist().ifPresent(artist -> searchTermBuilder.add(artist.getValue()));
-        String searchTerm = searchTermBuilder.toString();
+        SearchQueryBuilder searchQueryBuilder = new SearchQueryBuilder();
+
+        HashSet<MetadataKey> fieldsUsedForSearch = new HashSet<>(Arrays.asList(
+                MetadataKey.TITLE,
+                MetadataKey.ARTIST
+        ));
+        Metadata currentBestMetadata = this.metadataSorter.getProgrammsBest();
+        currentBestMetadata.asMap().entrySet().stream()
+                .filter(keyFieldEntry -> fieldsUsedForSearch.contains(keyFieldEntry.getKey()))
+                .map(entry -> entry.getValue().getValue())
+                .forEach(value -> searchQueryBuilder.addSearchTerm((String) value));
+
+        String searchTerm = searchQueryBuilder.toString();
         System.out.println(searchTerm);
 
         for (MetadataFinder finder : this.metadataFinders) {
@@ -104,15 +118,27 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                             throw new CompletionException(e);
                         }
                     })
+                    .ifItFailsHandle(throwable -> throwable.printStackTrace())
                     .whenCompletedSuccessful(t -> {
                         for (Metadata metadata : t) {
-                            this.metadataRepository.add(metadata);
+                            this.metadataSorter.add(metadata);
                         }
-                        this.updateTrackView(this.metadataRepository.getProgrammsBest());
+                        this.updateTrackView(this.metadataSorter.getProgrammsBest());
                     })
-                    .ifItFailsHandle(throwable -> throwable.printStackTrace())
                     .submit();
         }
+    }
+
+    private void getValuesFromEditor() {
+        List<MetadataField> info = new ArrayList<>();
+        this.trackView.getAlbumCover().ifPresent(image -> info.add(new MetadataField.Cover(image)));
+        if (!this.trackView.getTitle().isEmpty()) info.add(new MetadataField.Title(this.trackView.getTitle()));
+        if (!this.trackView.getArtist().isEmpty()) info.add(new MetadataField.Artist(this.trackView.getArtist()));
+        if (!this.trackView.getAlbum().isEmpty()) info.add(new MetadataField.Album(this.trackView.getAlbum()));
+        if (!this.trackView.getTrackNumber().isEmpty()) info.add(new MetadataField.TrackNumber(Integer.parseInt(this.trackView.getTrackNumber())));
+        if (!this.trackView.getReleaseYear().isEmpty()) info.add(new MetadataField.ReleaseYear(Integer.parseInt(this.trackView.getReleaseYear())));
+        if (!this.trackView.getGenre().isEmpty()) info.add(new MetadataField.Genre(this.trackView.getGenre()));
+        this.metadataSorter.setUserOverriddenButTestIfItsReallyFromUser(new Metadata(info));
     }
 
 
@@ -121,8 +147,8 @@ public class TrackEditorController implements MyDownloadProgressCallback {
         metadata.getTitle().ifPresent(title -> this.trackView.setTitle(title.getValue()));
         metadata.getArtist().ifPresent(artist -> this.trackView.setArtist(artist.getValue()));
         metadata.getAlbum().ifPresent(album -> this.trackView.setAlbum(album.getValue()));
-        metadata.getTrackNumber().ifPresent(trackNumber -> this.trackView.setTrackNumber(trackNumber.getValue()));
-        metadata.getReleaseYear().ifPresent(releaseYear -> this.trackView.setReleaseYear(releaseYear.getValue()));
+        metadata.getTrackNumber().ifPresent(trackNumber -> this.trackView.setTrackNumber(trackNumber.getValue().toString()));
+        metadata.getReleaseYear().ifPresent(releaseYear -> this.trackView.setReleaseYear(releaseYear.getValue().toString()));
         metadata.getGenre().ifPresent(genre -> this.trackView.setGenre(genre.getValue()));
     }
 

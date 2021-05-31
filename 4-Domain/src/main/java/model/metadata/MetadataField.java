@@ -3,11 +3,11 @@ package model.metadata;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
-public class Metadatum<T> {
+public class MetadataField<T> {
     private final MetadataKey key;
     private final T value;
 
-    private Metadatum(MetadataKey key, T value) {
+    private MetadataField(MetadataKey key, T value) {
 
         this.key = key;
         this.value = value;
@@ -30,8 +30,8 @@ public class Metadatum<T> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
-        Metadatum<?> metadatum = (Metadatum<?>) o;
-        return this.key == metadatum.key && Objects.equals(this.value, metadatum.value);
+        MetadataField<?> metadataField = (MetadataField<?>) o;
+        return this.key == metadataField.key && Objects.equals(this.value, metadataField.value);
     }
 
     @Override
@@ -39,7 +39,9 @@ public class Metadatum<T> {
         return Objects.hash(this.key, this.value);
     }
 
-    public static class Cover extends Metadatum<BufferedImage> {
+
+
+    public static final class Cover extends MetadataField<BufferedImage> {
         public Cover(BufferedImage value) {
             super(MetadataKey.COVER, value);
         }
@@ -52,37 +54,37 @@ public class Metadatum<T> {
         }
     }
 
-    public static class Title extends Metadatum<String> {
+    public static final class Title extends MetadataField<String> {
         public Title(String value) {
             super(MetadataKey.TITLE, value);
         }
     }
 
-    public static class Artist extends Metadatum<String> {
+    public static final class Artist extends MetadataField<String> {
         public Artist(String value) {
             super(MetadataKey.ARTIST, value);
         }
     }
 
-    public static class Album extends Metadatum<String> {
+    public static final class Album extends MetadataField<String> {
         public Album(String value) {
             super(MetadataKey.ALBUM, value);
         }
     }
 
-    public static class TrackNumber extends Metadatum<Integer> {
+    public static final class TrackNumber extends MetadataField<Integer> {
         public TrackNumber(Integer value) {
             super(MetadataKey.TRACK_NUMBER, value);
         }
     }
 
-    public static class ReleaseYear extends Metadatum<Integer> {
+    public static final class ReleaseYear extends MetadataField<Integer> {
         public ReleaseYear(Integer value) {
             super(MetadataKey.RELEASE_YEAR, value);
         }
     }
 
-    public static class Genre extends Metadatum<String> {
+    public static final class Genre extends MetadataField<String> {
         public Genre(String value) {
             super(MetadataKey.GENRE, value);
         }

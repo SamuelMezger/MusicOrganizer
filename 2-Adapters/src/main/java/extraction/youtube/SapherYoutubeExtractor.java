@@ -6,7 +6,7 @@ import extraction.YoutubeExtractor;
 import extraction.ExtractionException;
 import image.Crop;
 import model.metadata.Metadata;
-import model.metadata.Metadatum;
+import model.metadata.MetadataField;
 import model.youtube.BasicVideoInfo;
 import model.youtube.FullVideoInfo;
 
@@ -65,20 +65,20 @@ public class SapherYoutubeExtractor implements YoutubeExtractor {
     public Metadata getFullVideoInfo(String id) throws ExtractionException, IOException {
         FullVideoInfo videoInfo = this.youtubeRequestFactory.getFullVideoInfo(id);
 
-        List<Metadatum> info = new ArrayList<>();
+        List<MetadataField> info = new ArrayList<>();
 
-        info.add(new Metadatum.Cover(Crop.centerSquare(
+        info.add(new MetadataField.Cover(Crop.centerSquare(
                 this.downloader.getOkImage(videoInfo.getVideoThumbnailURL()
                         .replace("maxresdefault", "mqdefault"))
         )));
 
-        info.add(new Metadatum.Title(videoInfo.getTitle().orElse(videoInfo.getVideoTitle())));
+        info.add(new MetadataField.Title(videoInfo.getTitle().orElse(videoInfo.getVideoTitle())));
 
-        videoInfo.getArtist().ifPresent(artistString -> info.add(new Metadatum.Artist(artistString)));
-        videoInfo.getAlbum().ifPresent(albumString -> info.add(new Metadatum.Album(albumString)));
+        videoInfo.getArtist().ifPresent(artistString -> info.add(new MetadataField.Artist(artistString)));
+        videoInfo.getAlbum().ifPresent(albumString -> info.add(new MetadataField.Album(albumString)));
 
         videoInfo.getReleaseYear().ifPresent(
-                yearString -> info.add(new Metadatum.ReleaseYear(Integer.parseInt(yearString)))
+                yearString -> info.add(new MetadataField.ReleaseYear(Integer.parseInt(yearString)))
         );
 
         return new Metadata(info);

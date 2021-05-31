@@ -1,6 +1,7 @@
 package fx;
 
 import event.GuiEventHandler;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -19,6 +20,7 @@ import view.TrackEditorView;
 
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -40,16 +42,47 @@ public class FxTrackEditorView extends VBox implements TrackEditorView, Initiali
     @FXML public Button downloadButton;
     @FXML private ProgressBar downloadProgressBar;
     private final Popup popup;
+    private final FxResultsView fxResultsView;
+    private GuiEventHandler metadataChangedListener;
+    private BufferedImage albumCoverImage;
 
     public FxTrackEditorView() {
         this.popup = new Popup();
-        this.popup.getContent().add(new ResultsView());
+        this.fxResultsView = new FxResultsView();
+        this.popup.getContent().add(this.fxResultsView);
+    }
 
+    @Override
+    public FxResultsView getResultChooser() {
+        return this.fxResultsView;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.configurePopup();
+        ChangeListener<String> changeListener = (observableValue, oldValue, newValue) -> this.someValueChanged();
+        this.trackTitleField.textProperty().addListener(changeListener);
+        this.artistField.textProperty().addListener(changeListener);
+        this.albumField.textProperty().addListener(changeListener);
+        this.genreField.textProperty().addListener(changeListener);
+
+        this.trackNumberField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                this.trackNumberField.setText(newValue.replaceAll("[^\\d]", ""));
+                this.someValueChanged();
+            }
+        });
+        this.releaseYearField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                this.releaseYearField.setText(newValue.replaceAll("[^\\d]", ""));
+                this.someValueChanged();
+            }
+        });
+
+    }
+
+    private void someValueChanged() {
+        Optional.ofNullable(this.metadataChangedListener).ifPresent(GuiEventHandler::handle);
     }
 
     public void configurePopup() {
@@ -74,8 +107,13 @@ public class FxTrackEditorView extends VBox implements TrackEditorView, Initiali
     }
 
     @Override
-    public void addDownloadButtonListener(GuiEventHandler listener) {
-        this.downloadButton.setOnAction(listener::handle);
+    public void setEditorValuesChangedListener(GuiEventHandler listener) {
+        this.metadataChangedListener = listener;
+    }
+
+    @Override
+    public void setDownloadButtonListener(GuiEventHandler listener) {
+        this.downloadButton.setOnAction(evObj -> listener.handle());
     }
 
 
@@ -107,10 +145,18 @@ public class FxTrackEditorView extends VBox implements TrackEditorView, Initiali
         this.videoTitleLabel.setText(videoTitle);
     }
 
+    //    Getters & Setters for fields
+
     @Override
     public void setAlbumCover(BufferedImage cover) {
+        this.albumCoverImage = cover;
         Image fxImage = SwingFXUtils.toFXImage(cover, null);
         this.albumCoverImageView.setImage(fxImage);
+    }
+
+    @Override
+    public Optional<BufferedImage> getAlbumCover() {
+        return Optional.ofNullable(this.albumCoverImage);
     }
 
     @Override
@@ -119,8 +165,18 @@ public class FxTrackEditorView extends VBox implements TrackEditorView, Initiali
     }
 
     @Override
+    public String getTitle() {
+        return this.trackTitleField.getText();
+    }
+
+    @Override
     public void setArtist(String artist) {
         this.artistField.setText(artist);
+    }
+
+    @Override
+    public String getArtist() {
+        return this.artistField.getText();
     }
 
     @Override
@@ -129,17 +185,37 @@ public class FxTrackEditorView extends VBox implements TrackEditorView, Initiali
     }
 
     @Override
-    public void setTrackNumber(Integer trackNumber) {
-        this.trackNumberField.setText(trackNumber.toString());
+    public String getAlbum() {
+        return this.albumField.getText();
     }
 
     @Override
-    public void setReleaseYear(Integer releaseYear) {
-        this.releaseYearField.setText(releaseYear.toString());
+    public void setTrackNumber(String trackNumber) {
+        this.trackNumberField.setText(trackNumber);
+    }
+
+    @Override
+    public String getTrackNumber() {
+        return this.trackNumberField.getText();
+    }
+
+    @Override
+    public void setReleaseYear(String releaseYear) {
+        this.releaseYearField.setText(releaseYear);
+    }
+
+    @Override
+    public String getReleaseYear() {
+        return this.releaseYearField.getText();
     }
 
     @Override
     public void setGenre(String genre) {
         this.genreField.setText(genre);
+    }
+
+    @Override
+    public String getGenre() {
+        return this.genreField.getText();
     }
 }

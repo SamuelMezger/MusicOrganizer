@@ -22,15 +22,15 @@ public class Controller {
         this.taskManager = taskManager;
         this.metadataFinders = metadataFinders;
 
-        this.view.addGetPLButtonListener(actionEvent -> {
+        this.view.addGetPLButtonListener(() -> {
             String url = view.getPlUrl();
             this.startPlSync(url);
         });
 
         this.trackControllers = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
-//            BasicVideoInfo basicVideoInfo = new BasicVideoInfo("OJdG8wsU8cw", "Rule the world");
-            BasicVideoInfo basicVideoInfo = new BasicVideoInfo("JQGRg8XBnB4", "MOMOLAND");
+            BasicVideoInfo basicVideoInfo = new BasicVideoInfo("OJdG8wsU8cw", "Rule the world");
+//            BasicVideoInfo basicVideoInfo = new BasicVideoInfo("JQGRg8XBnB4", "MOMOLAND");
             TrackEditorView trackView = this.view.addTrackEditor();
             this.trackControllers.add(new TrackEditorController(
                     basicVideoInfo,
@@ -53,6 +53,13 @@ public class Controller {
                         throw new CompletionException(e);
                     }
                 })
+                .ifItFailsHandle(throwable -> {
+                    this.view.enableDownloadButton();
+                    this.view.showCouldNotGetPlaylistException(
+                            "Could not get Playlist",
+                            "Please make sure you have an internet connection, and that the playlist your trying to download is not private.",
+                            throwable.getMessage());
+                })
                 .whenCompletedSuccessful(basicVideoInfos -> {
                     for (BasicVideoInfo basicInfo : basicVideoInfos) {
                         TrackEditorView trackView = this.view.addTrackEditor();
@@ -64,13 +71,6 @@ public class Controller {
                                 this.metadataFinders
                         ));
                     }
-                })
-                .ifItFailsHandle(throwable -> {
-                    this.view.enableDownloadButton();
-                    this.view.showCouldNotGetPlaylistException(
-                            "Could not get Playlist",
-                            "Please make sure you have an internet connection, and that the playlist your trying to download is not private.",
-                            throwable.getMessage());
                 })
                 .submit();
     }

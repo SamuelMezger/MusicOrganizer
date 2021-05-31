@@ -59,7 +59,7 @@ public class MainWindow extends Application implements MainView {
 
     @Override
     public void addGetPLButtonListener(GuiEventHandler listener) {
-        this.syncPLButton.setOnAction(listener::handle);
+        this.syncPLButton.setOnAction(evObj -> listener.handle());
     }
 
     @Override

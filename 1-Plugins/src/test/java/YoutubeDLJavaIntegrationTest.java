@@ -10,10 +10,6 @@ public class YoutubeDLJavaIntegrationTest {
     private final static String MusicVid_TheFatRat_RuleTheWorld_ID = "OJdG8wsU8cw";
     private final static String YTMusic_TheFatRat_RuleTheWorld_ID = "es__dhV4nT8";
 
-    @Before
-    public void setUp() {
-        YoutubeDL.setExecutablePath("youtube-dlc");
-    }
 
     @Test
     public void MusicInVid_extractable() throws YoutubeDLException {

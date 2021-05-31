@@ -3,7 +3,7 @@ package extraction;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SearchTermBuilder {
+public class SearchQueryBuilder {
     private static final Set<String> wordsToRemove = new HashSet<>(Arrays.asList(
             "",
             "official",
@@ -28,20 +28,20 @@ public class SearchTermBuilder {
 
     private final Set<String> allSearchTerms = new LinkedHashSet<>();
 
-    public SearchTermBuilder add(String searchTerm) {
-        this.allSearchTerms.addAll(SearchTermBuilder.splitAtDisallowedChars(searchTerm));
+    public SearchQueryBuilder addSearchTerm(String searchTerm) {
+        this.allSearchTerms.addAll(SearchQueryBuilder.splitAtDisallowedChars(searchTerm));
         return this;
     }
 
-    public SearchTermBuilder add(List<String> searchTerms) {
-        searchTerms.forEach(this::add);
+    public SearchQueryBuilder addSearchTerms(List<String> searchTerms) {
+        searchTerms.forEach(this::addSearchTerm);
         return this;
     }
 
     @Override
     public String toString() {
-        List<String> cleanWords = SearchTermBuilder.splitAtDisallowedChars(String.join(" ", this.allSearchTerms));
-        return SearchTermBuilder.removeDisallowedWordsAndJoin(cleanWords);
+        List<String> cleanWords = SearchQueryBuilder.splitAtDisallowedChars(String.join(" ", this.allSearchTerms));
+        return SearchQueryBuilder.removeDisallowedWordsAndJoin(cleanWords);
     }
 
 

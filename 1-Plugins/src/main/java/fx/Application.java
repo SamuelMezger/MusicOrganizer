@@ -1,7 +1,7 @@
 package fx;
 
 
-import control.TaskFactory;
+import control.UiThread;
 import control.Controller;
 import extraction.Downloader;
 import extraction.MetadataFinder;
@@ -33,8 +33,8 @@ public class Application {
         );
 
 
-        TaskFactory taskFactory = new FxTaskFactory();
-        TaskManager taskManager = new TaskManager(taskFactory, 5);
+        UiThread uiThread = new FxUiThread();
+        TaskManager taskManager = new TaskManager(uiThread, 5);
 
         MainWindow view = new MainWindow();
         try {

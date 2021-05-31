@@ -7,9 +7,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import model.metadata.Metadata;
+import view.ResultsView;
 
-public class ResultsView extends VBox {
-    public ResultsView() {
+public class FxResultsView extends VBox implements ResultsView {
+    public FxResultsView() {
 //        this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(3), new Insets(0, 0, 0, 0))));
         this.setPadding(new Insets(2, 0, 0, 0));
         this.setSpacing(3);
@@ -23,6 +25,7 @@ public class ResultsView extends VBox {
         this.getChildren().add(new Label("No Results"));
     }
 
+//    public void addResult(Metadata metadata) {
     public void addResult(String title) {
         HBox resultPane = new HBox();
         resultPane.setSpacing(5);
@@ -38,7 +41,7 @@ public class ResultsView extends VBox {
         ));
 
         Button result = new Button(null, resultPane);
-
+//        result.setOnAction(actionEvent -> newMetadataHandler.handle(metadata));
         this.getChildren().add(result);
     }
 }

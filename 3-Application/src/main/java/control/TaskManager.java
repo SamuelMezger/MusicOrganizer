@@ -2,27 +2,25 @@ package control;
 
 import extraction.MyDownloadProgressCallback;
 
-import java.util.Optional;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 
 public class TaskManager {
     private final ExecutorService executor;
-    private final TaskFactory taskFactory;
+    private final UiThread uiThread;
 
-    public TaskManager(TaskFactory taskFactory, int numberOfThreads) {
+    public TaskManager(UiThread uiThread, int numberOfThreads) {
         this.executor = Executors.newFixedThreadPool(numberOfThreads);
-        this.taskFactory = taskFactory;
+        this.uiThread = uiThread;
     }
 
     public void addTask(Runnable task) {
         this.executor.submit(task);
     }
 
-    public <T> TaskBuilder<T> doInBackground(Supplier<T> task) {
-        return new TaskBuilder<T>(task).setExecutor(this.executor);
+    public <T> CreateTask<T> doInBackground(Supplier<T> task) {
+        return CreateTask.doInBackground(task, this.executor, this.uiThread);
     }
 
     abstract class SupplierWithProgress<T> implements MyDownloadProgressCallback, Supplier<T> {
@@ -39,51 +37,8 @@ public class TaskManager {
         }
     }
 
-    class TaskBuilder<T> {
-        private Supplier<T> task;
-        private Consumer<? super T> onCompletedUiAction;
-        private Consumer<? super Throwable> exceptionHandler;
-        private Executor executor;
-
-        public TaskBuilder(Supplier<T> task) {
-            this.task = task;
-        }
-
-        public TaskBuilder<T> setExecutor(Executor executor) {
-            this.executor = executor;
-            return this;
-        }
-
-        public TaskBuilder<T> doInBackground(Supplier<T> task) {
-            this.task = task;
-            return this;
-        }
-
-        public TaskBuilder<T> whenCompletedSuccessful(Consumer<? super T> onCompletedUiAction) {
-            this.onCompletedUiAction = onCompletedUiAction;
-            return this;
-        }
-
-        public TaskBuilder<T> ifItFailsHandle(Consumer<? super Throwable> exceptionHandler) {
-            this.exceptionHandler = exceptionHandler;
-            return this;
-        }
-
-        public void submit() {
-            CompletableFuture.supplyAsync(this.task, this.executor)
-                    .whenComplete((t, throwable) -> this.runInUiThread(() -> {
-                        if (throwable != null) this.exceptionHandler.accept(throwable);
-                        else Optional.ofNullable(this.onCompletedUiAction).ifPresent(consumer -> consumer.accept(t));
-                    }));
-        }
-
-        public void runInUiThread(Runnable runnable) {
-            TaskManager.this.runInUiThread(runnable);
-        }
-    }
-
     private void runInUiThread(Runnable runnable){
-        this.taskFactory.runInUiThread(runnable);
+        this.uiThread.run(runnable);
     }
 
 

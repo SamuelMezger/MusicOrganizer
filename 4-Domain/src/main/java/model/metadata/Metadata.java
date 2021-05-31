@@ -1,19 +1,16 @@
 package model.metadata;
 
 
-import model.metadata.Metadatum.*;
+import model.metadata.MetadataField.*;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class Metadata {
-    private final EnumMap<MetadataKey, Metadatum> metadata;
+    private final EnumMap<MetadataKey, MetadataField> metadata;
 
-    public Metadata(List<Metadatum> list) {
+    public Metadata(List<MetadataField> list) {
         this.metadata = new EnumMap<>(MetadataKey.class);
-        list.forEach(metadatum -> this.metadata.put(metadatum.getKey(), metadatum));
+        list.forEach(field -> this.metadata.put(field.getKey(), field));
     }
 
     public Optional<Cover> getCover() {
@@ -44,19 +41,20 @@ public class Metadata {
         return Optional.ofNullable((Genre) this.metadata.get(MetadataKey.GENRE));
     }
 
-    public EnumMap<MetadataKey, Metadatum> asMap() {
-        return this.metadata;
+    public Map<MetadataKey, MetadataField> asMap() {
+        return Collections.unmodifiableMap(this.metadata);
     }
 
-    public Optional<Metadatum> get(MetadataKey key) {
+
+    public Optional<MetadataField> get(MetadataKey key) {
         return Optional.ofNullable(this.metadata.get(key));
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder().append("Metadata{");
-        this.metadata.forEach((metadataKey, metadatum) ->
-                builder.append(metadatum.toString()).append(", "));
+        this.metadata.forEach((metadataKey, field) ->
+                builder.append(field.toString()).append(", "));
         return builder.append("}").toString();
     }
 
