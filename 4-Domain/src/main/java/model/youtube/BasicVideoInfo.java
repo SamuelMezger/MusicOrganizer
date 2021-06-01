@@ -1,7 +1,7 @@
 package model.youtube;
 
 
-public class BasicVideoInfo {
+public final class BasicVideoInfo {
     private final String videoId;
     private final String videoTitle;
                 

@@ -1,6 +1,6 @@
 package fx;
 
-import control.UiThread;
+import use_cases.UiThread;
 import javafx.application.Platform;
 
 public class FxUiThread implements UiThread {

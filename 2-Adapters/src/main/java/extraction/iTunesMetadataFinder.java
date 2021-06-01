@@ -1,6 +1,6 @@
 package extraction;
 
-import json.JsonParserI;
+import extraction.json.JsonParserI;
 import model.metadata.Metadata;
 import model.metadata.MetadataField;
 

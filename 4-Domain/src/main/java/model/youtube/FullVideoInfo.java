@@ -2,7 +2,7 @@ package model.youtube;
 
 import java.util.Optional;
 
-public class FullVideoInfo {
+public final class FullVideoInfo {
     private final String videoId;
     private final String videoTitle;
     private final String videoThumbnailURL;

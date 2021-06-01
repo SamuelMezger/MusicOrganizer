@@ -1,5 +1,5 @@
 package extraction;
 
-public interface MyDownloadProgressCallback {
+public interface ProgressCallback {
     void onProgressUpdate(float progress, long etaInSeconds);
 }

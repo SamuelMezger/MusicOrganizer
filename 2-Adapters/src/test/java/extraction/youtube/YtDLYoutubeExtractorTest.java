@@ -10,7 +10,6 @@ import extraction.*;
 
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 public class YtDLYoutubeExtractorTest {
 
@@ -27,7 +26,7 @@ public class YtDLYoutubeExtractorTest {
         Downloader downloader = EasyMock.createMock(Downloader.class);
         YoutubeExtractor youtubeExtractor = new YtDLYoutubeExtractor(youtubeRequestFactory, EasyMock.createMock(BasicVideoInfoParser.class), downloader);
 
-        Capture<MyDownloadProgressCallback> cap = EasyMock.newCapture();
+        Capture<ProgressCallback> cap = EasyMock.newCapture();
 
         YoutubeRequest youtubeRequest = EasyMock.createMock(YoutubeRequest.class);
         youtubeRequest.setOption("format", "m4a");
@@ -48,7 +47,7 @@ public class YtDLYoutubeExtractorTest {
             });
         } catch (FileNotFoundException expected) {}
 
-        MyDownloadProgressCallback cb = cap.getValue();
+        ProgressCallback cb = cap.getValue();
         cb.onProgressUpdate(0, 60);
         cb.onProgressUpdate(10, 50);
         cb.onProgressUpdate(50, 30);
@@ -70,7 +69,7 @@ public class YtDLYoutubeExtractorTest {
 
         youtubeRequest.setOption("skip-download");
         youtubeRequest.setOption("flat-playlist");
-        youtubeRequest.setOption("dump-json");
+        youtubeRequest.setOption("dump-extraction.json");
         EasyMock.expectLastCall();
         YoutubeResponse youtubeResponse = EasyMock.createMock(YoutubeResponse.class);
         EasyMock.expect(youtubeResponse.getOut()).andReturn(flatPlaylistRawOut);

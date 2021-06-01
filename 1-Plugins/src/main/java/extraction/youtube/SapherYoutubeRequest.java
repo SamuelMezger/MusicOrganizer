@@ -3,7 +3,7 @@ package extraction.youtube;
 import com.sapher.youtubedl.YoutubeDL;
 import com.sapher.youtubedl.YoutubeDLException;
 import com.sapher.youtubedl.YoutubeDLRequest;
-import extraction.MyDownloadProgressCallback;
+import extraction.ProgressCallback;
 import extraction.ExtractionException;
 
 public class SapherYoutubeRequest implements YoutubeRequest {
@@ -35,9 +35,9 @@ public class SapherYoutubeRequest implements YoutubeRequest {
         }
     }
 
-    public YoutubeResponse execute(MyDownloadProgressCallback myDownloadProgressCallback) throws ExtractionException {
+    public YoutubeResponse execute(ProgressCallback progressCallback) throws ExtractionException {
         try {
-            return new SapherYoutubeResponse(YoutubeDL.execute(this.youtubeDLRequest, myDownloadProgressCallback::onProgressUpdate));
+            return new SapherYoutubeResponse(YoutubeDL.execute(this.youtubeDLRequest, progressCallback::onProgressUpdate));
         } catch (YoutubeDLException e) {
             e.printStackTrace();
             throw new ExtractionException(e);

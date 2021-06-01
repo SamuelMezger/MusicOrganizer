@@ -1,10 +1,10 @@
 package extraction.youtube;
 
 import extraction.Downloader;
-import extraction.MyDownloadProgressCallback;
+import extraction.ProgressCallback;
 import extraction.YoutubeExtractor;
 import extraction.ExtractionException;
-import image.Crop;
+import extraction.Crop;
 import model.metadata.Metadata;
 import model.metadata.MetadataField;
 import model.youtube.BasicVideoInfo;
@@ -30,14 +30,14 @@ public class YtDLYoutubeExtractor implements YoutubeExtractor {
     }
 
     @Override
-    public File downloadAudio(String videoId, String destinationFolderPath, MyDownloadProgressCallback myDownloadProgressCallback) throws ExtractionException, FileNotFoundException {
+    public File downloadAudio(String videoId, String destinationFolderPath, ProgressCallback progressCallback) throws ExtractionException, FileNotFoundException {
         YoutubeRequest downloadRequest = this.youtubeRequestFactory.makeRequest(videoId, destinationFolderPath);
         downloadRequest.setOption("format", "m4a");
-        downloadRequest.execute(myDownloadProgressCallback);
+        downloadRequest.execute(progressCallback);
 //        If there is no exception thrown to this point the file should be there,
 //        but if the file was already downloaded youtube-dl doesn't update the progress
 //        so we do it manually
-        myDownloadProgressCallback.onProgressUpdate(100, 0);
+        progressCallback.onProgressUpdate(100, 0);
         File folder = new File(destinationFolderPath);
         return Arrays.stream(folder.listFiles((dir, name) -> name.endsWith(videoId + ".m4a"))).findFirst()
                 .orElseThrow(FileNotFoundException::new);

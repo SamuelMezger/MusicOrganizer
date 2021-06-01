@@ -1,7 +1,7 @@
 package nanojson;
 
 import extraction.ExtractionException;
-import json.JsonParserI;
+import extraction.json.JsonParserI;
 import org.junit.Assert;
 import org.junit.Test;
 

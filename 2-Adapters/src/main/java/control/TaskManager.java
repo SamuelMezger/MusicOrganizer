@@ -1,6 +1,7 @@
 package control;
 
-import extraction.MyDownloadProgressCallback;
+import extraction.ProgressCallback;
+import use_cases.UiThread;
 
 import java.util.concurrent.*;
 import java.util.function.Supplier;
@@ -23,11 +24,11 @@ public class TaskManager {
         return CreateTask.doInBackground(task, this.executor, this.uiThread);
     }
 
-    abstract class SupplierWithProgress<T> implements MyDownloadProgressCallback, Supplier<T> {
+    public abstract class SupplierWithProgress<T> implements ProgressCallback, Supplier<T> {
 
-        private final MyDownloadProgressCallback callback;
+        private final ProgressCallback callback;
 
-        public SupplierWithProgress(MyDownloadProgressCallback callback) {
+        public SupplierWithProgress(ProgressCallback callback) {
             this.callback = callback;
         }
 

@@ -1,4 +1,4 @@
-package repository;
+package use_cases;
 
 import model.metadata.Metadata;
 import model.metadata.MetadataKey;
@@ -8,7 +8,7 @@ import java.util.*;
 
 public class MetadataSorter {
     private final List<Metadata> foundMetadataList = new ArrayList<>();
-    private int numberNonOfFallbacks = 0;
+    private int numberOfFallbacks = 0;
     private Optional<Metadata> userOverridden = Optional.empty();
     private Metadata programmsBestGuess;
 
@@ -17,13 +17,13 @@ public class MetadataSorter {
     }
 
     public void add(Metadata metadata) {
-        this.foundMetadataList.add(this.foundMetadataList.size()-this.numberNonOfFallbacks,  metadata);
+        this.foundMetadataList.add(this.foundMetadataList.size()-this.numberOfFallbacks,  metadata);
         this.updateProgrammsBest();
     }
 
     public void addFallback(Metadata metadata) {
         this.foundMetadataList.add(metadata);
-        this.numberNonOfFallbacks++;
+        this.numberOfFallbacks++;
         this.updateProgrammsBest();
     }
 

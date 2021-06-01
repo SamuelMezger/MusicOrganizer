@@ -1,4 +1,4 @@
-package extraction;
+package use_cases;
 
 import java.util.*;
 import java.util.stream.Collectors;

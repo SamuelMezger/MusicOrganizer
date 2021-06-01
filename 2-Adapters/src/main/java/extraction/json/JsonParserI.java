@@ -1,4 +1,4 @@
-package json;
+package extraction.json;
 
 import extraction.ExtractionException;
 

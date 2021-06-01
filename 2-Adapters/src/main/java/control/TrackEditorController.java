@@ -3,6 +3,7 @@ package control;
 import extraction.*;
 import model.metadata.Metadata;
 import model.metadata.MetadataField;
+import use_cases.SyncPair;
 import view.TrackEditorView;
 
 import java.io.File;
@@ -12,22 +13,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletionException;
 
-public class TrackEditorController implements MyDownloadProgressCallback {
+public class TrackEditorController implements ProgressCallback {
     private final TrackEditorView trackView;
     private final TaskManager taskManager;
-    private final TrackSyncer trackSyncer;
+    private final SyncPair syncPair;
 
-    public TrackEditorController(TrackSyncer trackSyncer,
+    public TrackEditorController(SyncPair syncPair,
                                  TrackEditorView trackView,
                                  TaskManager taskManager
     ) {
-        this.trackSyncer = trackSyncer;
+        this.syncPair = syncPair;
         this.taskManager = taskManager;
         this.trackView = trackView;
         this.trackView.setDownloadButtonListener(this::startAudioDownload);
         this.trackView.setEditorValuesChangedListener(this::onEditorValuesChanged);
 
-        trackView.setVideoTitle(this.trackSyncer.getInitialInfo().getVideoTitle());
+        trackView.setVideoTitle(this.syncPair.getInitialInfo().getVideoTitle());
         this.startFullInfoDownloadAndMetadataSearch();
     }
 
@@ -38,7 +39,7 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                     @Override
                     public File get() {
                         try {
-                            TrackEditorController.this.trackSyncer.downloadAudio(this);
+                            TrackEditorController.this.syncPair.downloadAudio(this);
                             return null;
                         } catch (ExtractionException | FileNotFoundException e) {
                             throw new CompletionException(e);
@@ -57,7 +58,7 @@ public class TrackEditorController implements MyDownloadProgressCallback {
         this.taskManager
                 .doInBackground(() -> {
                     try {
-                        this.trackSyncer.downloadFullInfo();
+                        this.syncPair.downloadFullInfo();
                         return null;
                     } catch (ExtractionException | IOException e) {
                         throw new CompletionException(e);
@@ -69,7 +70,7 @@ public class TrackEditorController implements MyDownloadProgressCallback {
                         }
                 )
                 .whenCompletedSuccessful(Null -> {
-                    this.updateTrackView(this.trackSyncer.getCurrentChoice());
+                    this.updateTrackView(this.syncPair.getCurrentChoice());
                     this.startMetadataSearch();
                 })
                 .submit();
@@ -79,7 +80,7 @@ public class TrackEditorController implements MyDownloadProgressCallback {
         this.taskManager
                 .doInBackground(() -> {
                     try {
-                        this.trackSyncer.searchMetadata();
+                        this.syncPair.searchMetadata();
                         return null;
                     } catch (IOException | ExtractionException e) {
                         throw new CompletionException(e);
@@ -88,7 +89,7 @@ public class TrackEditorController implements MyDownloadProgressCallback {
 //                TODO propagate error message to view
                 .ifItFailsHandle(throwable -> throwable.printStackTrace())
                 .whenCompletedSuccessful(t -> {
-                    this.updateTrackView(this.trackSyncer.getCurrentChoice());
+                    this.updateTrackView(this.syncPair.getCurrentChoice());
 //                    this.updateResultChooser(this.trackEditor.getAllFoundMetadata());
                 })
                 .submit();
@@ -96,7 +97,7 @@ public class TrackEditorController implements MyDownloadProgressCallback {
 
     private void onEditorValuesChanged() {
         Metadata newMetadata = this.getValuesFromEditor();
-        this.trackSyncer.userChangedValuesTo(newMetadata);
+        this.syncPair.userChangedValuesTo(newMetadata);
     }
 
 

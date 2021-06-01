@@ -3,6 +3,7 @@ package control;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import use_cases.UiThread;
 
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;

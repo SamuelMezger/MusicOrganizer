@@ -1,6 +1,8 @@
 package control;
 
 
+import use_cases.UiThread;
+
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;

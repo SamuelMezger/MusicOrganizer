@@ -3,6 +3,7 @@ package repository;
 import model.metadata.Metadata;
 import model.metadata.MetadataField;
 import org.junit.Test;
+import use_cases.MetadataSorter;
 
 import java.util.Arrays;
 import java.util.Collections;

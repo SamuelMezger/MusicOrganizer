@@ -1,10 +1,9 @@
-package control;
+package use_cases;
 
 import extraction.*;
 import model.metadata.Metadata;
 import model.metadata.MetadataKey;
 import model.youtube.BasicVideoInfo;
-import repository.MetadataSorter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,17 +11,18 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
-public class TrackSyncer {
+public class SyncPair {
     private final YoutubeExtractor youtubeExtractor;
     private final BasicVideoInfo initialInfo;
     private final List<MetadataFinder> metadataFinders;
     private final MetadataSorter metadataSorter;
-    private File audioFile;
+    private Optional<File> audioFile;
 
-    public TrackSyncer(BasicVideoInfo initialInfo,
-                       YoutubeExtractor youtubeExtractor,
-                       List<MetadataFinder> metadataFinders
+    public SyncPair(BasicVideoInfo initialInfo,
+                    YoutubeExtractor youtubeExtractor,
+                    List<MetadataFinder> metadataFinders
     ) {
         this.initialInfo = initialInfo;
         this.youtubeExtractor = youtubeExtractor;
@@ -42,13 +42,13 @@ public class TrackSyncer {
         return this.metadataSorter.getAllFoundMetadata();
     }
 
-    public void downloadAudio(MyDownloadProgressCallback dlCallback) throws ExtractionException, FileNotFoundException {
+    public void downloadAudio(ProgressCallback dlCallback) throws ExtractionException, FileNotFoundException {
 //        TODO pass current working directory as absolute path to YoutubeExtractor constructor
-        this.audioFile = this.youtubeExtractor.downloadAudio(
+        this.audioFile = Optional.of(this.youtubeExtractor.downloadAudio(
                 this.initialInfo.getVideoId(),
                 "/tmp/test/",
                 dlCallback
-        );
+        ));
     }
 
     public void downloadFullInfo() throws IOException, ExtractionException {
@@ -61,26 +61,28 @@ public class TrackSyncer {
     }
 
     public void searchMetadata() throws IOException, ExtractionException {
-        SearchQueryBuilder searchQueryBuilder = new SearchQueryBuilder();
-
-        HashSet<MetadataKey> fieldsUsedForSearch = new HashSet<>(Arrays.asList(
-                MetadataKey.TITLE,
-                MetadataKey.ARTIST
-        ));
-        Metadata currentBestMetadata = this.metadataSorter.getCurrentChoice();
-        currentBestMetadata.asMap().entrySet().stream()
-                .filter(keyFieldEntry -> fieldsUsedForSearch.contains(keyFieldEntry.getKey()))
-                .map(entry -> entry.getValue().getValue())
-                .forEach(value -> searchQueryBuilder.addSearchTerm((String) value));
-
-        String searchTerm = searchQueryBuilder.toString();
-        System.out.println(searchTerm);
-
+        String searchQuery = this.buildSearchQuery();
         for (MetadataFinder finder : this.metadataFinders) {
-            List<Metadata> results = finder.searchFor(searchTerm);
+            List<Metadata> results = finder.searchFor(searchQuery);
             for (Metadata metadata : results) {
                 this.metadataSorter.add(metadata);
             }
         }
+    }
+
+    private String buildSearchQuery() {
+        HashSet<MetadataKey> fieldsUsedForSearch = new HashSet<>(Arrays.asList(
+                MetadataKey.TITLE,
+                MetadataKey.ARTIST
+        ));
+
+        SearchQueryBuilder searchQueryBuilder = new SearchQueryBuilder();
+
+        this.metadataSorter.getCurrentChoice().asMap().entrySet().stream()
+                .filter(keyFieldEntry -> fieldsUsedForSearch.contains(keyFieldEntry.getKey()))
+                .map(entry -> entry.getValue().getValue())
+                .forEach(value -> searchQueryBuilder.addSearchTerm((String) value));
+
+        return searchQueryBuilder.toString();
     }
 }

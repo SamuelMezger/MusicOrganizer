@@ -2,16 +2,13 @@ package sapher;
 
 import extraction.ExtractionException;
 import extraction.youtube.BasicVideoInfoParser;
-import extraction.youtube.JacksonVideoInfoParser;
 import extraction.youtube.NanoBasicVideoInfoParser;
 import nanojson.JsonParserAdapter;
 import org.junit.Assert;
 import org.junit.Test;
 import model.youtube.BasicVideoInfo;
 
-import java.util.Optional;
-
-public class JacksonVideoInfoParserTest {
+public class NanoVideoInfoParserTest {
 
     @Test
     public void testFromJson() throws ExtractionException {

@@ -1,12 +1,12 @@
 package view;
 
 import event.GuiEventHandler;
-import extraction.MyDownloadProgressCallback;
+import extraction.ProgressCallback;
 
 import java.awt.image.BufferedImage;
 import java.util.Optional;
 
-public interface TrackEditorView extends MyDownloadProgressCallback {
+public interface TrackEditorView extends ProgressCallback {
 
     void showVideoNotAvailable(String errorMessage);
 

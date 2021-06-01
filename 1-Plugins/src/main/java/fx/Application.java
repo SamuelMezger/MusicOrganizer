@@ -2,16 +2,16 @@ package fx;
 
 
 import control.Controller;
-import control.UiThread;
+import extraction.youtube.NanoBasicVideoInfoParser;
+import use_cases.UiThread;
 import extraction.Downloader;
 import extraction.MetadataFinder;
 import extraction.iTunesMetadataFinder;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import json.JsonParserI;
+import extraction.json.JsonParserI;
 import nanojson.JsonParserAdapter;
 import okhttp.OkHttpDownloader;
-import extraction.youtube.JacksonVideoInfoParser;
 import extraction.youtube.YtDLYoutubeExtractor;
 import extraction.youtube.SapherYoutubeRequestFactory;
 import control.TaskManager;
@@ -25,7 +25,7 @@ public class Application {
     public static void main(String[] args) {
         Downloader downloader = new OkHttpDownloader();
         JsonParserI jsonParser = new JsonParserAdapter();
-        YoutubeExtractor youtubeExtractor = new YtDLYoutubeExtractor(new SapherYoutubeRequestFactory(), new JacksonVideoInfoParser(), downloader);
+        YoutubeExtractor youtubeExtractor = new YtDLYoutubeExtractor(new SapherYoutubeRequestFactory(), new NanoBasicVideoInfoParser(jsonParser), downloader);
 
 
         List<MetadataFinder> metadataFinders = Arrays.asList(
@@ -37,11 +37,6 @@ public class Application {
         TaskManager taskManager = new TaskManager(uiThread, 5);
 
         MainWindow view = new MainWindow();
-        try {
-            view.init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         Platform.startup(() -> {
 //            create primary stage

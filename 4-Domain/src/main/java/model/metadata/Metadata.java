@@ -5,7 +5,7 @@ import model.metadata.MetadataField.*;
 
 import java.util.*;
 
-public class Metadata {
+public final class Metadata {
     private final EnumMap<MetadataKey, MetadataField> metadata;
 
     public Metadata(List<MetadataField> list) {

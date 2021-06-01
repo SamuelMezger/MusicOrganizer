@@ -14,6 +14,6 @@ public interface YoutubeExtractor {
     Metadata getFullVideoInfo(String id) throws ExtractionException, IOException;
     File downloadAudio(String videoId,
                        String destinationFolderPath,
-                       MyDownloadProgressCallback myDownloadProgressCallback)
+                       ProgressCallback progressCallback)
             throws ExtractionException, FileNotFoundException;
 }

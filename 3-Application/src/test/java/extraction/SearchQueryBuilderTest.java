@@ -1,6 +1,7 @@
 package extraction;
 
 import org.junit.Test;
+import use_cases.SearchQueryBuilder;
 
 
 import static org.junit.Assert.*;

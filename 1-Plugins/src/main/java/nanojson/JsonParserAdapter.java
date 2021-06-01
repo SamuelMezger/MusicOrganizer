@@ -5,7 +5,7 @@ import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParserException;
 import extraction.ExtractionException;
-import json.JsonParserI;
+import extraction.json.JsonParserI;
 
 public class JsonParserAdapter implements JsonParserI {
 
