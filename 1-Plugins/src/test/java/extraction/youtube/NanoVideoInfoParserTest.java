@@ -1,8 +1,6 @@
-package sapher;
+package extraction.youtube;
 
 import extraction.ExtractionException;
-import extraction.youtube.BasicVideoInfoParser;
-import extraction.youtube.NanoBasicVideoInfoParser;
 import nanojson.JsonParserAdapter;
 import org.junit.Assert;
 import org.junit.Test;

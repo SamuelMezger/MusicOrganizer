@@ -8,13 +8,15 @@ public interface MainView {
 
     public void pleaseComplainAboutNotFxThread();
 
-    void addGetPLButtonListener(GuiEventHandler handler);
+    void setGetPLButtonListener(GuiEventHandler handler);
+
+    void setSaveButtonListener(GuiEventHandler handler);
 
     void disableDownloadButton();
 
     void enableDownloadButton();
 
-    void showCouldNotGetPlaylistException(String title, String message, String details);
+    void showException(String title, String message, String details);
 
     String getPlUrl();
 }

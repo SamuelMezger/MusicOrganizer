@@ -3,6 +3,8 @@ package fx;
 
 import control.Controller;
 import extraction.youtube.NanoBasicVideoInfoParser;
+import jaudiotagger.JAudioFileTagger;
+import use_cases.AudioFileTagger;
 import use_cases.UiThread;
 import extraction.Downloader;
 import extraction.MetadataFinder;
@@ -27,6 +29,7 @@ public class Application {
         JsonParserI jsonParser = new JsonParserAdapter();
         YoutubeExtractor youtubeExtractor = new YtDLYoutubeExtractor(new SapherYoutubeRequestFactory(), new NanoBasicVideoInfoParser(jsonParser), downloader);
 
+        AudioFileTagger audioTagger = new JAudioFileTagger();
 
         List<MetadataFinder> metadataFinders = Arrays.asList(
                 new iTunesMetadataFinder(downloader, jsonParser)
@@ -43,7 +46,7 @@ public class Application {
             Stage stage = new Stage();
             stage.setOnCloseRequest(windowEvent -> taskManager.shutdown());
             view.start(stage);
-            new Controller(view, taskManager, youtubeExtractor, metadataFinders);
+            new Controller(view, taskManager, metadataFinders, audioTagger, youtubeExtractor);
         });
 
     }

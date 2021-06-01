@@ -22,12 +22,14 @@ public class MainWindow extends Application implements MainView {
     private VBox root;
     private VBox trackListPane;
     private Button syncPLButton;
+    private Button saveAllButton;
 
 
     @Override
     public void start(Stage primaryStage) {
         this.playListUrl = new TextField("PLvy1DvHP0feqGoG474BC0lTTjMNjroK1R");
         this.syncPLButton = new Button("Sync Playlist");
+        this.saveAllButton = new Button("Save all");
 
         primaryStage.setTitle("Hello World!");
         this.root = new VBox();
@@ -40,6 +42,7 @@ public class MainWindow extends Application implements MainView {
         topBarChildren.add(btn);
         topBarChildren.add(this.playListUrl);
         topBarChildren.add(this.syncPLButton);
+        topBarChildren.add(this.saveAllButton);
         this.root.getChildren().add(topBar);
 
         this.trackListPane = new VBox();
@@ -58,8 +61,13 @@ public class MainWindow extends Application implements MainView {
     }
 
     @Override
-    public void addGetPLButtonListener(GuiEventHandler listener) {
+    public void setGetPLButtonListener(GuiEventHandler listener) {
         this.syncPLButton.setOnAction(evObj -> listener.handle());
+    }
+
+    @Override
+    public void setSaveButtonListener(GuiEventHandler listener) {
+        this.saveAllButton.setOnAction(evObj -> listener.handle());
     }
 
     @Override
@@ -73,7 +81,7 @@ public class MainWindow extends Application implements MainView {
     }
 
     @Override
-    public void showCouldNotGetPlaylistException(String title, String message, String details) {
+    public void showException(String title, String message, String details) {
         Alert alert = new Alert(Alert.AlertType.ERROR, message + "\n\n" + details);
         alert.setTitle(title);
         alert.show();

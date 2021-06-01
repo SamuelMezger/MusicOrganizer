@@ -20,14 +20,14 @@ public class SearchQueryBuilderTest {
     }
 
     @Test
-    public void removeSpecialCharactersButNotOtherLanguagesTest() {
+    public void dontRemoveOtherLanguagesTest() {
         String before = "時間を持て余しているのでは";
         String after = new SearchQueryBuilder().addSearchTerm(before).toString();
         assertEquals(before, after);
     }
 
     @Test
-    public void removeSpecialCharactersButNotNumbersTest() {
+    public void dontRemoveNumbersTest() {
         String before = "12 ab 34 cd";
         String after = new SearchQueryBuilder().addSearchTerm(before).toString();
         assertEquals(before, after);

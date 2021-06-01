@@ -14,17 +14,20 @@ import java.util.List;
 import java.util.Optional;
 
 public class SyncPair {
-    private final YoutubeExtractor youtubeExtractor;
     private final BasicVideoInfo initialInfo;
+    private final AudioFileTagger audioTagger;
+    private final YoutubeExtractor youtubeExtractor;
     private final List<MetadataFinder> metadataFinders;
     private final MetadataSorter metadataSorter;
-    private Optional<File> audioFile;
+    private Optional<File> audioFile = Optional.empty();
 
     public SyncPair(BasicVideoInfo initialInfo,
+                    AudioFileTagger audioTagger,
                     YoutubeExtractor youtubeExtractor,
                     List<MetadataFinder> metadataFinders
     ) {
         this.initialInfo = initialInfo;
+        this.audioTagger = audioTagger;
         this.youtubeExtractor = youtubeExtractor;
         this.metadataFinders = metadataFinders;
         this.metadataSorter = new MetadataSorter();
@@ -58,6 +61,12 @@ public class SyncPair {
 
     public void userChangedValuesTo(Metadata newMetadata) {
         this.metadataSorter.setUserOverriddenButTestIfItsReallyFromUser(newMetadata);
+    }
+
+    public void save() throws IOException {
+        if (this.audioFile.isPresent())
+                this.audioTagger.tagFile(this.audioFile.get(), this.metadataSorter.getCurrentChoice());
+        else throw new IOException("No Audio File found");
     }
 
     public void searchMetadata() throws IOException, ExtractionException {

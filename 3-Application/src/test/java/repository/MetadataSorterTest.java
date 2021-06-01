@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class MetadataSorterTest {
 
     @Test
-    public void testOrder() {
+    public void orderTest() {
         MetadataSorter repo = new MetadataSorter();
         repo.addFallback(new Metadata(Arrays.asList(
                 new MetadataField.Title("bad"),
@@ -38,7 +38,7 @@ public class MetadataSorterTest {
     }
 
     @Test
-    public void testUserChoice() {
+    public void userChoiceTest() {
         MetadataSorter repo = new MetadataSorter();
         repo.addFallback(new Metadata(Arrays.asList(
                 new MetadataField.Title("bad"),
@@ -68,7 +68,7 @@ public class MetadataSorterTest {
 
 
     @Test
-    public void testEmpty() {
+    public void emptyTest() {
         MetadataSorter repo = new MetadataSorter();
         assertEquals(repo.getCurrentChoice(), new Metadata(Collections.emptyList()));
     }

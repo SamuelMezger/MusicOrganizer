@@ -69,7 +69,7 @@ public class YtDLYoutubeExtractorTest {
 
         youtubeRequest.setOption("skip-download");
         youtubeRequest.setOption("flat-playlist");
-        youtubeRequest.setOption("dump-extraction.json");
+        youtubeRequest.setOption("dump-json");
         EasyMock.expectLastCall();
         YoutubeResponse youtubeResponse = EasyMock.createMock(YoutubeResponse.class);
         EasyMock.expect(youtubeResponse.getOut()).andReturn(flatPlaylistRawOut);

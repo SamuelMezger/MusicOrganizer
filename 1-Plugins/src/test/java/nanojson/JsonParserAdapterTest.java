@@ -31,13 +31,4 @@ public class JsonParserAdapterTest {
         int trackNr = jsonResult.getInt("trackNumber");
         Assert.assertEquals(9, trackNr);
     }
-    @Test
-    public void forEachTest() throws ExtractionException {
-        JsonParserI.JsonArrayI jsonResult = new JsonParserAdapter().jsonObjectFrom(this.itunesResponseBody).getArray("results");
-//        for (Object jsonObject : jsonResult) {
-//            System.out.println("yay");
-//        }
-
-    }
-
 }
